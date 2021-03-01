@@ -3,23 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/navigation_offers">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/navigation_offers"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:label="@string/title_offers">
+
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="majd_hamdan.com.final_project.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_history"
+        android:name="majd_hamdan.com.easyjob.ui.HistoryFragment"
+        android:label="@string/title_history"
+        tools:layout="@layout/fragment_offers">
+    </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="majd_hamdan.com.final_project.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/navigation_profile"
+        android:name="majd_hamdan.com.easyjob.ui.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile">
+    </fragment>
 
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="majd_hamdan.com.final_project.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
 </navigation>
