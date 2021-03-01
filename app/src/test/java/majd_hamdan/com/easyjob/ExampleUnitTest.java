@@ -1,4 +1,4 @@
-package majd_hamdan.com.final_project;
+package majd_hamdan.com.easyjob;
 
 import org.junit.Test;
 
