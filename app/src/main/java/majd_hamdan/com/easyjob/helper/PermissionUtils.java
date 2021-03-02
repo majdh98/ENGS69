@@ -25,9 +25,12 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
+
+import android.util.Log;
 import android.widget.Toast;
 
 import majd_hamdan.com.easyjob.R;
+import majd_hamdan.com.easyjob.ui.OffersFragment;
 
 /**
  * Utility class for access to runtime permissions.
@@ -159,9 +162,10 @@ public abstract class PermissionUtils {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // After click on Ok, request the permission.
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                    requestCode);
+//                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, OffersFragment.LOCATION_PERMISSION_REQUEST_CODE);
+//                            ActivityCompat.requestPermissions(getActivity(),
+//                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                                    requestCode);
                             // Do not finish the Activity while requesting permission.
                             finishActivity = false;
                         }
