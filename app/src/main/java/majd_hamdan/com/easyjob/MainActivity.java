@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.google.android.gms.common.internal.Constants;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -37,6 +38,7 @@ import majd_hamdan.com.easyjob.helper.PermissionUtils;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     String TAG = "mh";
 
+
     //Map and location variables
     private GoogleMap map;
     private FusedLocationProviderClient fusedLocationClient;
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -84,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) nav_fragment.getChildFragmentManager().getFragments().get(0);
         //sync the google map fragment
         mapFragment.getMapAsync(this);
+
     }
 
     @Override
