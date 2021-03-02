@@ -64,7 +64,7 @@
     <fragment
         android:id="@+id/navigation_history"
         android:name="majd_hamdan.com.easyjob.ui.HistoryFragment"
-        android:label="@string/title_history"
+        android:label="@string/title_offers"
         tools:layout="@layout/fragment_offers">
     </fragment>
 

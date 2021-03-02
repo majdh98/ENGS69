@@ -5,12 +5,12 @@
     <item
         android:icon="@drawable/baseline_work_black_24dp"
         android:id="@+id/navigation_offers"
-        android:title="@string/title_offers" />
+        android:title="@string/title_jobs" />
 
     <item
         android:id="@+id/navigation_history"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_history" />
+        android:title="@string/title_offers" />
 
     <item
         android:id="@+id/navigation_profile"
