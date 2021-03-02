@@ -28,11 +28,10 @@
             </intent-filter>
         </activity>
 
-<!--        <service-->
-<!--            android:name="MyNavigationService"-->
-<!--            android:foregroundServiceType="location">-->
-<!--        &lt;!&ndash; Any inner elements would go here. &ndash;&gt;-->
-<!--        </service>-->
+        <activity android:name=".ContentActivity"></activity>
+        <activity android:name=".authentication.LoginActivity"></activity>
+        <activity android:name=".authentication.SignUpActivity"></activity>
+
     </application>
 
 </manifest>

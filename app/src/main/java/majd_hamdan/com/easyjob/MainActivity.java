@@ -1,11 +1,14 @@
 package majd_hamdan.com.easyjob;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.PersistableBundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.common.internal.Constants;
@@ -22,8 +25,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.annotation.LongDef;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -34,59 +40,41 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import majd_hamdan.com.easyjob.authentication.LoginActivity;
 import majd_hamdan.com.easyjob.helper.PermissionUtils;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity {
     String TAG = "mh";
 
-
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_offers, R.id.navigation_history, R.id.navigation_profile)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
-
-
-
-
-        //get google map fragment from the nav host
-        NavHostFragment nav_fragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        Fragment offers_fragment = nav_fragment.getChildFragmentManager().getFragments().get(0);
-        Log.d(TAG, "onCreate: " + offers_fragment);
-        Log.d(TAG, "onCreate: " + offers_fragment.getChildFragmentManager());
-//        SupportMapFragment mapFragment = (SupportMapFragment) offers_fragment.getChildFragmentManager().getFragments().get(0);
-        //sync the google map fragment
-//        mapFragment.getMapAsync(this);
-
+        // Initialize Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        if (firebaseUser == null) {
+            // Not logged in, launch the Log In activity
+            loadLogIn();
+        }
     }
 
-
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
-
-
-
+    public void loadLogIn(){
+        Log.d(TAG, "loadLogIn: ");
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
-
-
-
-
+    public void clicked(View view){
+        Intent intent = new Intent(this, ContentActivity.class);
+        startActivity(intent);
+    }
 
 }
