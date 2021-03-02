@@ -28,6 +28,10 @@ android {
     }
 }
 
+//for firebase
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -44,4 +48,19 @@ dependencies {
     //google play services for google map
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    //import firebase BOM
+    implementation platform('com.google.firebase:firebase-bom:26.5.0')
+
+    // Add the dependency for the Firebase SDK for Google Analytics
+    //When using the BoM, don't specify versions in Firebase dependencies
+    implementation 'com.google.firebase:firebase-analytics'
+
+    //for database
+    implementation 'com.google.firebase:firebase-database:19.6.0'
+
+    //authentication
+    implementation "com.google.firebase:firebase-auth:20.0.3"
+
+
 }
