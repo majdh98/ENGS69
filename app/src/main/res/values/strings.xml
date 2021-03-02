@@ -5,9 +5,6 @@
     <string name="title_profile">Profile</string>
 
 
-
-
-
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to show the avaliable jobs around you.</string>
     <string name="location_permission_denied">EasyJob requires location permission to work. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'EasyJob\'.</string>

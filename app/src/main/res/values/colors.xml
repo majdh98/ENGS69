@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="splash_color">#5271FF</color>
 
     <color name="primaryColor">#0d47a1</color>
     <color name="primaryLightColor">#5472d3</color>
