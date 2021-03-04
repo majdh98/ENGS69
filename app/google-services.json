@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "556178320522",
+    "project_id": "easyjob-bcd43",
+    "storage_bucket": "easyjob-bcd43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556178320522:android:9cb616c3badd752a309173",
+        "android_client_info": {
+          "package_name": "majd_hamdan.com.easyjob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556178320522-ds5h1mtk7m95k7binm7vcntl3d1ce2bs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXLZ2Z0DNmtNZpoTcNLu2Bw-4vscCVocM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556178320522-ds5h1mtk7m95k7binm7vcntl3d1ce2bs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
