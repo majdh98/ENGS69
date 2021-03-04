@@ -108,16 +108,13 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 .title("Marker"));
         //check for permission and enable location layer.
         enableMyLocation();
-        Log.d("mh", "onMapReady: ");
 
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        Log.d("mh", "onMapReady: ");
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            Log.d("mh", "onMapReady: ");
                             LatLng latLng = new LatLng(location.getLatitude(),
                                     location.getLongitude());
                             // Logic to handle location object

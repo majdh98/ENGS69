@@ -27,4 +27,10 @@
     <string name="add_item">Add New Item</string>
     <string name="action_logout">Logout</string>
 
+    <!-- add job-->
+    <string name="job_type">Please insert job type:</string>
+    <string name="pay">Please insert pay here:</string>
+    <string name="add_job">Create an Offer</string>
+    <string name="create_offer_button_label">Create Offer</string>
+
 </resources>

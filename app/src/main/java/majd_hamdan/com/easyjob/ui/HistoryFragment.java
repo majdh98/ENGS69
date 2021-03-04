@@ -21,12 +21,16 @@ import majd_hamdan.com.easyjob.Job;
 import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.RVAdapter;
 import majd_hamdan.com.easyjob.ViewJobsActivity;
+import majd_hamdan.com.easyjob.job.AddJobActivity;
 
 public class HistoryFragment extends Fragment {
 
     RecyclerView view;
     TextView welcomeMessage;
     Button viewJobButtons;
+    Button addJob;
+
+    private String fragment_tag = "tag";
 
     // todo: this is a test, the job entries should come form the db
     private List<Job> jobs;
@@ -37,6 +41,8 @@ public class HistoryFragment extends Fragment {
         // get view
         View returnView = inflater.inflate(R.layout.fragment_history, container, false);
 
+
+
         // get ui elements
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
         viewJobButtons = (Button)returnView.findViewById(R.id.viewJobs);
@@ -44,6 +50,13 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), ViewJobsActivity.class));
+            }
+        });
+        addJob = (Button) returnView.findViewById(R.id.createJob);
+        addJob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AddJobActivity.class));
             }
         });
 

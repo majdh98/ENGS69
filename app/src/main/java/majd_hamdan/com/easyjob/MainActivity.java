@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
 
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +85,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void clicked(View view){
-        Intent intent = new Intent(this, ContentActivity.class);
-        startActivity(intent);
-    }
 }

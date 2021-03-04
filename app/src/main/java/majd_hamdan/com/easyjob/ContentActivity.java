@@ -34,8 +34,6 @@ public class ContentActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
 
-
-
         //get google map fragment from the nav host
         NavHostFragment nav_fragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         Fragment offers_fragment = nav_fragment.getChildFragmentManager().getFragments().get(0);
