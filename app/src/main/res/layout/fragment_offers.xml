@@ -12,14 +12,6 @@
         android:layout_height="match_parent"
         android:label="@string/title_offers">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="onDeleteClicked"
-            android:padding="10dp"
-            android:text="DELETE"></Button>
-
     </fragment>
 
 

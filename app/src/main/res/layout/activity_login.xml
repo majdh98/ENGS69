@@ -19,7 +19,7 @@
         android:inputType="textEmailAddress"
         android:hint="@string/email_hint" >
 
-        <requestFocus />
+        <requestFocus></requestFocus>
     </EditText>
 
     <EditText
@@ -30,7 +30,8 @@
         android:layout_below="@+id/emailField"
         android:ems="10"
         android:hint="@string/password_hint"
-        android:inputType="textPassword" />
+        android:inputType="textPassword">
+    </EditText>
 
     <Button
         android:id="@+id/loginButton"
@@ -38,7 +39,19 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/passwordField"
         android:layout_below="@+id/passwordField"
-        android:text="@string/login_button_label" />
+        android:onClick="onLoginClicked"
+        android:text="@string/login_button_label">
+    </Button>
+
+    <Button
+        android:id="@+id/singupButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/loginButton"
+        android:layout_below="@+id/loginButton"
+        android:onClick="onSignupClicked"
+        android:text="@string/sign_up_button_label">
+    </Button>
 
     <TextView
         android:id="@+id/signUpText"
@@ -47,6 +60,7 @@
         android:layout_below="@+id/loginButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="69dp"
-        android:text="@string/sign_up_text" />
+        android:text="@string/log_in_text">
+    </TextView>
 
 </RelativeLayout>

@@ -61,12 +61,22 @@ public class MainActivity extends AppCompatActivity {
         if (firebaseUser == null) {
             // Not logged in, launch the Log In activity
             loadLogIn();
+        }else{
+           loadContent();
         }
+
+
     }
 
     public void loadLogIn(){
-        Log.d(TAG, "loadLogIn: ");
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    public void loadContent(){
+        Intent intent = new Intent(this, ContentActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
