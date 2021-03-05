@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import majd_hamdan.com.easyjob.ContentActivity;
 import majd_hamdan.com.easyjob.R;
 
 import majd_hamdan.com.easyjob.helper.PermissionUtils;
@@ -103,9 +104,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
 
         map = googleMap;
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
         //check for permission and enable location layer.
         enableMyLocation();
 
@@ -122,6 +120,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                         }
                     }
                 });
+
     }
 
     //location functions----------------------------------------------------------------------------

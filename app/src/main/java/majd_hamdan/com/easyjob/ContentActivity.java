@@ -1,5 +1,6 @@
 package majd_hamdan.com.easyjob;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -32,13 +33,6 @@ public class ContentActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
-
-        //get google map fragment from the nav host
-        NavHostFragment nav_fragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        Fragment offers_fragment = nav_fragment.getChildFragmentManager().getFragments().get(0);
-        Log.d(TAG, "onCreate: " + offers_fragment);
-        Log.d(TAG, "onCreate: " + offers_fragment.getChildFragmentManager());
 
     }
 }

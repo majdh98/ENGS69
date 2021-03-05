@@ -8,11 +8,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/job_type">
+        android:text="@string/job_type"
+        android:textSize="18dp"
+        android:textColor="@color/black">
     </TextView>
 
     <EditText
         android:id="@+id/jobtypeField"
+        android:hint="@string/job_type_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text">
@@ -22,7 +25,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pay">
+        android:text="@string/pay"
+        android:textSize="18dp"
+        android:textColor="@color/black">
     </TextView>
 
 
@@ -30,7 +35,88 @@
         android:id="@+id/payField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal">
+        android:inputType="numberDecimal"
+        android:hint="@string/pay_hint">
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/address"
+        android:textSize="18dp"
+        android:textColor="@color/black">
+    </TextView>
+
+
+    <EditText
+        android:id="@+id/addressField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text">
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/city"
+        android:textSize="18dp"
+        android:textColor="@color/black">
+    </TextView>
+
+    <EditText
+        android:id="@+id/cityField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text">
+    </EditText>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/state"
+        android:textSize="18dp"
+        android:textColor="@color/black">
+    </TextView>
+
+
+    <EditText
+        android:id="@+id/stateField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text">
+    </EditText>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zipcode"
+        android:textSize="18dp"
+        android:textColor="@color/black">
+    </TextView>
+
+    <EditText
+        android:id="@+id/zipcodeField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number">
+    </EditText>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/country"
+        android:textSize="18dp"
+        android:textColor="@color/black">
+    </TextView>
+
+    <EditText
+        android:id="@+id/countryField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text">
     </EditText>
 
     <Button
@@ -40,6 +126,7 @@
         android:onClick="onAddJobClicked"
         android:text="@string/create_offer_button_label">
     </Button>
+
 
 
 

@@ -28,9 +28,16 @@
     <string name="action_logout">Logout</string>
 
     <!-- add job-->
-    <string name="job_type">Please insert job type:</string>
-    <string name="pay">Please insert pay here:</string>
+    <string name="job_type">Job type</string>
+    <string name="job_type_hint">Babysitting, moving furniture,...</string>
+    <string name="pay">Pay</string>
+    <string name="pay_hint">Please insert hourly pay in dolars</string>
     <string name="add_job">Create an Offer</string>
     <string name="create_offer_button_label">Create Offer</string>
+    <string name="address">Address</string>
+    <string name="city">City</string>
+    <string name="zipcode">Zip Code</string>
+    <string name="country">Country</string>
+    <string name="state">State</string>
 
 </resources>
