@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import majd_hamdan.com.easyjob.job.Job;
+
 public class RvAdapterControl extends RecyclerView.Adapter<RvAdapterControl.JobControl> {
 
     public static class JobControl extends RecyclerView.ViewHolder{
@@ -51,9 +53,9 @@ public class RvAdapterControl extends RecyclerView.Adapter<RvAdapterControl.JobC
 
     @Override
     public void onBindViewHolder(JobControl holder, int i){
-        holder.street.setText(jobs.get(i).street);
-        holder.townState.setText(jobs.get(i).townState);
-        holder.jobPhoto.setImageResource(jobs.get(i).photoID);
+        holder.street.setText("ssssssssss");
+        holder.townState.setText("ssssssssss");
+        holder.jobPhoto.setImageResource(0);
         holder.typePay.setText(jobs.get(i).type + " - $" + String.valueOf(jobs.get(i).hourlyPay) + "/hr");
     }
 

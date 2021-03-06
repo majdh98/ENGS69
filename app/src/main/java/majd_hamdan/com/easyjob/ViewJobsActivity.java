@@ -4,12 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import majd_hamdan.com.easyjob.job.Job;
 
 public class ViewJobsActivity extends AppCompatActivity {
 
@@ -39,10 +39,10 @@ public class ViewJobsActivity extends AppCompatActivity {
     // todo: this is only a test - read data from db instead
     private void initJobs(){
         jobs = new ArrayList<>();
-        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
+//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
+//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
+//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
+//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
     }
 
     private void initializeAdapter(){

@@ -1,6 +1,5 @@
 package majd_hamdan.com.easyjob;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +9,9 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
+
+import majd_hamdan.com.easyjob.job.Job;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
 
@@ -50,15 +49,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
 
     @Override
     public void onBindViewHolder(JobViewHolder jobViewHolder, int i){
-        jobViewHolder.street.setText(jobs.get(i).street);
-        jobViewHolder.townState.setText(jobs.get(i).townState);
-        jobViewHolder.jobPhoto.setImageResource(jobs.get(i).photoID);
-        jobViewHolder.typePay.setText(jobs.get(i).type + " - $" + String.valueOf(jobs.get(i).hourlyPay) + "/hr");
+        jobViewHolder.street.setText("ssssssssssssss");
+        jobViewHolder.townState.setText("ssssssssssssss");
+        jobViewHolder.jobPhoto.setImageResource(0);
+//        jobViewHolder.typePay.setText(jobs.get(i).type + " - $" + String.valueOf(jobs.get(i).hourlyPay) + "/hr");
+        jobViewHolder.typePay.setText("sssssssssssssss");
     }
 
     @Override
     public int getItemCount(){
-        return jobs.size();
+//        return jobs.size();
+        return 1;
     }
 
 }

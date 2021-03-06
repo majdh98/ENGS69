@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import majd_hamdan.com.easyjob.Job;
+import majd_hamdan.com.easyjob.job.Job;
 import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.RVAdapter;
 import majd_hamdan.com.easyjob.ViewJobsActivity;
@@ -75,11 +75,11 @@ public class HistoryFragment extends Fragment {
 
     // todo: this is only a test - read data from db instead
     private void initJobs(){
-        jobs = new ArrayList<>();
-        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
+//        jobs = new ArrayList<>();
+//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
+//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
+//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
+//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
     }
 
     private void initializeAdapter(){

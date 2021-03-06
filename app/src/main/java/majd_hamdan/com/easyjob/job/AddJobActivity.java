@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +27,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import majd_hamdan.com.easyjob.Job;
 import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.authentication.LoginActivity;
 
@@ -35,15 +36,20 @@ public class AddJobActivity extends AppCompatActivity  {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private String userId;
+    private Location job_location;
+    private FusedLocationProviderClient fusedLocationClient;
+
+
+
     private EditText job_type;
     private EditText job_pay;
+    private EditText job_description;
     private EditText address_field;
     private EditText city_field;
     private EditText zipcode_field;
     private EditText state_field;
     private EditText country_field;
-    private FusedLocationProviderClient fusedLocationClient;
-    private Location user_location;
+
 
     String TAG = "mh";
 
@@ -67,6 +73,7 @@ public class AddJobActivity extends AppCompatActivity  {
         // Add items via the Button and EditText at the bottom of the view.
         job_type = (EditText) findViewById(R.id.jobtypeField);
         job_pay = (EditText) findViewById(R.id.payField);
+        job_description = (EditText) findViewById(R.id.descriptionField);
         address_field = (EditText) findViewById(R.id.addressField);
         city_field = (EditText) findViewById(R.id.cityField);
         zipcode_field = (EditText) findViewById(R.id.zipcodeField);
@@ -74,7 +81,7 @@ public class AddJobActivity extends AppCompatActivity  {
         state_field = (EditText) findViewById(R.id.stateField);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
+        job_location = new Location(LocationManager.GPS_PROVIDER);
         //add user current address to address ui
         autofill_address();
 
@@ -82,9 +89,18 @@ public class AddJobActivity extends AppCompatActivity  {
 
     public void onAddJobClicked(View view){
         String type = job_type.getText().toString();
-        Double pay = Double.valueOf(String.valueOf(job_pay.getText()));
-        Job job = new Job("", "", 0, type, pay);
-        database.child("users").child(userId).child("offers_created").push().setValue(job);
+        String pay = String.valueOf(job_pay.getText());
+        String description = job_description.getText().toString();
+        if(getLocationFromAddress()){
+            Job job = new Job(description, type, job_location , pay, userId);
+            Log.d(TAG, "onAddJobClicked: " + database.child("offers").push().setValue(job));
+        }else{
+            CharSequence text = "Address can't be found, please enter address in requested format.";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(this, text, duration);
+            toast.show();
+        }
+
     }
 
     @SuppressLint("MissingPermission")
@@ -123,5 +139,36 @@ public class AddJobActivity extends AppCompatActivity  {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    public boolean getLocationFromAddress(){
+        String str_add = address_field.getText().toString();
+        String city = city_field.getText().toString();
+        String state = state_field.getText().toString();
+        String zipcode = zipcode_field.getText().toString();
+        String country = country_field.getText().toString();
+        String address = str_add + ", " + city + ", " + state + " " + zipcode + ", " + country;
+
+        try {
+            Geocoder selected_place_geocoder = new Geocoder(this);
+            List<Address> addresses;
+
+            addresses = selected_place_geocoder.getFromLocationName(address, 1);
+
+            if (addresses == null) {
+                return false;
+            } else {
+                Address location = addresses.get(0);
+                job_location.setLatitude(location.getLatitude());
+                job_location.setLongitude(location.getLongitude());
+                Log.d(TAG, String.valueOf(job_location.getLatitude()) + String.valueOf(job_location.getLongitude()));
+                return true;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }
