@@ -9,15 +9,46 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="majd_hamdan.com.easyjob.authentication.LoginActivity" >
 
+    <ImageView
+        android:layout_width="208dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/signUpText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="103dp"
+        android:layout_marginTop="69dp"
+        android:layout_marginEnd="103dp"
+        android:layout_marginBottom="280dp"
+        android:src="@drawable/logocircle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/signUpText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="280dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="260dp"
+        android:text="@string/easyjob"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/primaryDarkColor" />
+
     <EditText
         android:id="@+id/emailField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="345dp"
         android:ems="10"
-        android:inputType="textEmailAddress"
-        android:hint="@string/email_hint" >
+        android:hint="@string/email_hint"
+        android:inputType="textEmailAddress">
 
         <requestFocus></requestFocus>
     </EditText>
