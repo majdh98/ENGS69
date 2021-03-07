@@ -68,5 +68,14 @@ dependencies {
     //authentication
     implementation "com.google.firebase:firebase-auth:20.0.3"
 
+    //Geo queries
+    // Full GeoFire library for Realtime Database users
+    implementation 'com.firebase:geofire-android:3.1.0'
+
+    // GeoFire utililty functions for Cloud Firestore users who
+    // want to implement their own geo solution, see:
+    // https://firebase.google.com/docs/firestore/solutions/geoqueries
+    implementation 'com.firebase:geofire-android-common:3.1.0'
+
 
 }

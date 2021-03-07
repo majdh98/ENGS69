@@ -6,6 +6,7 @@ public class Job {
 
     //must be decalred public for firebase
     public Location location;
+    public String location_key;
     public String description;
     public String type;
     public String hourlyPay;
@@ -22,10 +23,10 @@ public class Job {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public Job(String description, String type, Location location, String hourlyPay, String creator_id){
+    public Job(String description, String type, String location_key, String hourlyPay, String creator_id){
         this.description = description;
         this.type = type;
-        this.location = location;
+        this.location_key = location_key;
         this.hourlyPay = hourlyPay;
         this.creator_id = creator_id;
         //default values
