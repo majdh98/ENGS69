@@ -9,14 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
+
 import majd_hamdan.com.easyjob.R;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends PreferenceFragmentCompat {
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View returnView = inflater.inflate(R.layout.fragment_profile, container, false);
-        return returnView;
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        // set the correct preferences
+        setPreferencesFromResource(R.xml.profile_preferences, rootKey);
+
     }
+
 }
