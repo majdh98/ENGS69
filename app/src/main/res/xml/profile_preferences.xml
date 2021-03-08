@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:visibility="visible"
+    app:iconSpaceReserved="false">
+
+    <!-- Account Preferences -->
+        <!-- CAN EDIT ANYTIME
+             INTENT TO CALL NEW ACTIVITY
+            - Profile Photo
+            - First Name
+            - Last Name
+            - Phone Number?
+            - SAVE, CANCEL BUTTON, DELETE ACCOUNT OPTION
+        -->
+    <PreferenceCategory
+        android:title="Account"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:summary="Edit Profile"
+            android:title="Name, Phone Number..."
+            android:icon="@drawable/account_circle">
+            <intent>
+                <!-- todo: add intent leading to profile activity -->
+            </intent>
+        </Preference>
+
+    </PreferenceCategory>
+
+    <!-- Manage Job Postings? -->
+        <!--CAN EDIT ANYTIME
+            INTENT TO CALL NEW ACTIVITY
+            - CardView of Jobs
+            - Mark Complete or Delete Job
+
+            OTHERS:
+            - Radius preference
+            - Unit preference
+        -->
+    <PreferenceCategory
+        android:title="Job Control"
+        app:iconSpaceReserved="false">
+        <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:summary="Manage Job Postings"
+            android:icon="@drawable/cog_transfer"
+            android:title="Delete jobs, marks as complete...">
+            <intent>
+                <!-- todo: add intent leading to job management activity -->
+            </intent>
+        </Preference>
+
+        <!-- Unit preference i.e. KM or Miles -->
+        <ListPreference
+            android:entries="@array/unit_preference_entries"
+            android:key="list_preference_1"
+            android:summary="Select the units"
+            android:title="Unit Preference"
+            android:icon="@drawable/tape_measure"
+            app:entries="@array/unit_preference_entries"
+            android:entryValues="@array/unit_preference_entry_value"
+            />
+
+        <!-- Job search radius for maps -->
+        <SeekBarPreference
+            android:icon="@drawable/map_search"
+            android:defaultValue="20"
+            android:max="100"
+            app:min="10"
+            app:showSeekBarValue="true"
+            android:summary="How wide to you want to look for jobs?"
+            android:title="Job Search Radius"
+            />
+
+    </PreferenceCategory>
+
+    <!-- Misc. -->
+        <!--
+            - Sign out
+                - Call the appropriate firebase method
+        -->
+    <PreferenceCategory
+        android:title="Misc. Settings"
+        app:iconSpaceReserved="false">
+
+        <!-- Delete Account -->
+        <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:summary="Take a break?"
+            android:icon="@drawable/logout"
+            android:title="Logout">
+            <intent>
+                <!-- todo: call appropriate DBMethod to sign out -->
+            </intent>
+        </Preference>
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
