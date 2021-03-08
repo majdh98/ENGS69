@@ -5,7 +5,6 @@ import android.location.Location;
 public class Job {
 
     //must be decalred public for firebase
-    public Location location;
     public String location_key;
     public String description;
     public String type;

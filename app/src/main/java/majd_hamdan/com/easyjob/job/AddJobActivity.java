@@ -24,9 +24,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,7 +42,7 @@ public class AddJobActivity extends AppCompatActivity  {
 
     private DatabaseReference database;
     private DatabaseReference geofire_db;
-    GeoFire geoFire;
+    private GeoFire geoFire;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private String userId;
@@ -94,6 +97,7 @@ public class AddJobActivity extends AppCompatActivity  {
         //add user current address to address ui
         autofill_address();
 
+
     }
 
     public void onAddJobClicked(View view){
@@ -104,7 +108,7 @@ public class AddJobActivity extends AppCompatActivity  {
         if(getLocationFromAddress()){
             Job job = new Job(description, type, offer_id , pay, userId);
             geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
-            database.child("users").child(userId).child("offers_created").child(offer_id).setValue(job);
+            database.child("offers").child(offer_id).setValue(job);
             fetch();
         }else{
             CharSequence text = "Address can't be found, please enter address in requested format.";
@@ -190,8 +194,24 @@ public class AddJobActivity extends AppCompatActivity  {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                Log.d(TAG, String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
+                DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+                Query offersQuery = offers_ref.child(key);
+                offersQuery.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Job job = dataSnapshot.getValue(Job.class);
+                        if(job != null){
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
+
 
             @Override
             public void onKeyExited(String key) {
@@ -216,76 +236,11 @@ public class AddJobActivity extends AppCompatActivity  {
 
     }
 
-    {
-        "rules":{
-        "geofire":{
-
-            "rules":{
-                "<your-geofire-node>":{
-                    // Allow anyone to read the GeoFire index
-                    ".read":true,
-
-                            // Index each location's geohash for faster querying
-                            ".indexOn": ["g"],
-
-                    // Schema validation
-                    "$key":{
-                        // Allow any authentication user to add, update, or remove keys in the GeoFire index
-                        ".write":"auth !== null",
-
-                                // Key validation
-                                ".validate":
-                        "newData.hasChildren(['g', 'l']) && newData.getPriority().length <= 22 && newData.getPriority().length > 0",
-
-                                // Geohash validation
-                                "g":{
-                            ".validate":"newData.val() == newData.parent().getPriority()"
-                        },
-
-                        // Location coordinates validation
-                        "l":{
-                            "0" :{
-                                ".validate":
-                                "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
-                            },
-                            "1" :{
-                                ".validate":
-                                "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
-                            },
-                            "$other":{
-                                ".validate":false
-                            }
-                        },
-
-                        // Don't allow any other keys to be written
-                        "$other":{
-                            ".validate":false
-                        }
-                    }
-                }
-
-            }
-        },
-        "users":{
-            "$uid":{
-                ".read":"auth != null && auth.uid == $uid",
-                        ".write":"auth != null && auth.uid == $uid",
-                        "name":{
-                    ".validate":"newData.isString() && newData.val().length > 0"
-                },
-                "phone_number":{
-                    ".validate":"newData.isNumber() && newData.val().length > 7"
-                }
 
 
-            }
-        },
-        "offers":{
-            ".read":"auth != null",
-                    ".write":"auth != null"
-        }
-    }
-    }
+
 
 
 }
+
+
