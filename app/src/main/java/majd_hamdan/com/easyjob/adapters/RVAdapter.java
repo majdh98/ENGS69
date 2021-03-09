@@ -3,7 +3,6 @@ package majd_hamdan.com.easyjob.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -19,20 +18,18 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
     public static class JobViewHolder extends RecyclerView.ViewHolder{
 
         CardView cv;
-        TextView street;
-        TextView townState;
-        TextView desctibtion;
-        TextView typePay;
+        TextView poster;
+        TextView address;
         TextView type;
+        TextView hourlyPay;
 
         JobViewHolder(View itemView){
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.jobCard);
-            street = (TextView)itemView.findViewById(R.id.streetText);
-            townState = (TextView)itemView.findViewById(R.id.townText);
-            desctibtion = itemView.findViewById(R.id.description);
-            typePay = (TextView)itemView.findViewById(R.id.typePayText);
-            type = itemView.findViewById(R.id.type);
+            poster = (TextView)itemView.findViewById(R.id.jobPoster);
+            address = (TextView)itemView.findViewById(R.id.jobAddress);
+            hourlyPay = (TextView)itemView.findViewById(R.id.jobHourlyPay);
+            type = itemView.findViewById(R.id.jobType);
         }
 
     }
@@ -52,13 +49,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
 
     @Override
     public void onBindViewHolder(JobViewHolder jobViewHolder, int i){
+        // get address details from the job object
         String[] address_lines = jobs.get(i).address.split(",");
         String[] state = address_lines[2].split(" ");
-        jobViewHolder.street.setText(address_lines[0]);
-        jobViewHolder.townState.setText(address_lines[1] + ", " + state[1] );
-        jobViewHolder.desctibtion.setText("Describtion: " + jobs.get(i).description);
-        jobViewHolder.typePay.setText("Job Type: " + jobs.get(i).type);
-        jobViewHolder.type.setText("Pay: " + jobs.get(i).hourlyPay + "/hour");
+
+        // build the card from the details
+        jobViewHolder.poster.setText(jobs.get(i).creator_id);
+        jobViewHolder.address.setText(address_lines[0] + ", " + address_lines[1] + ", " + state[1]);
+        jobViewHolder.type.setText("Job Type: " + jobs.get(i).type);
+        jobViewHolder.hourlyPay.setText("Pay: $" + jobs.get(i).hourlyPay + "/hour");
     }
 
     @Override
