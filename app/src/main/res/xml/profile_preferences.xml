@@ -94,8 +94,9 @@
             android:summary="Take a break?"
             android:icon="@drawable/logout"
             android:title="Logout">
-            <intent>
-                <!-- todo: call appropriate DBMethod to sign out -->
+            <intent
+                android:action="majd_hamdan.com.easyjob.authentication.LogOutActivity">
+
             </intent>
         </Preference>
 

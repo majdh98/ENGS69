@@ -1,4 +1,4 @@
-package majd_hamdan.com.easyjob;
+package majd_hamdan.com.easyjob.adapters;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.job.Job;
 
 public class RvAdapterControl extends RecyclerView.Adapter<RvAdapterControl.JobControl> {

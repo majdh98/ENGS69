@@ -2,11 +2,11 @@ package majd_hamdan.com.easyjob.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +27,9 @@ import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,14 +37,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import majd_hamdan.com.easyjob.job.Job;
 import majd_hamdan.com.easyjob.R;
-import majd_hamdan.com.easyjob.RVAdapter;
+import majd_hamdan.com.easyjob.adapters.RVAdapter;
 import majd_hamdan.com.easyjob.ViewJobsActivity;
 import majd_hamdan.com.easyjob.job.AddJobActivity;
 
@@ -54,6 +55,10 @@ public class HistoryFragment extends Fragment {
     private Button viewJobButtons;
     private Button addJob;
 
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private String userId;
+
     private FusedLocationProviderClient fusedLocationClient;
     private DatabaseReference geofire_db;
     private GeoFire geoFire;
@@ -61,6 +66,8 @@ public class HistoryFragment extends Fragment {
 
     private Location user_location;
     private String query_radius;
+    private int items_queried;
+    private int items_retrieved;
 
 
 
@@ -74,24 +81,11 @@ public class HistoryFragment extends Fragment {
         // get view
         View returnView = inflater.inflate(R.layout.fragment_history, container, false);
 
-
-
         // get ui elements
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
         viewJobButtons = (Button)returnView.findViewById(R.id.viewJobs);
-        viewJobButtons.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ViewJobsActivity.class));
-            }
-        });
-        addJob = (Button) returnView.findViewById(R.id.createJob);
-        addJob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), AddJobActivity.class));
-            }
-        });
+
+
 
         // get recycler view
         view = returnView.findViewById(R.id.recycler);
@@ -105,23 +99,26 @@ public class HistoryFragment extends Fragment {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         user_location = new Location(LocationManager.GPS_PROVIDER);
 
+        items_queried = 0;
+        items_retrieved = 0;
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        userId = firebaseUser.getUid();
+
         initJobs();
-        initializeAdapter();
+
 
         return returnView;
     }
 
 
-    // todo: this is only a test - read data from db instead
+
     private void initJobs(){
         jobs = new ArrayList<>();
-        fetch_jobs();
+        fetch_old_jobs();
 
-
-//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
-//        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
     }
 
     private void initializeAdapter(){
@@ -129,69 +126,49 @@ public class HistoryFragment extends Fragment {
         view.setAdapter(adapter);
     }
 
-
+    //gets user location then fetch jobs
     @SuppressLint("MissingPermission")
-    public void get_user_location(){
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            user_location = location;
-                        }
-                    }
-                });
+    public void fetch_old_jobs(){
+        fetch();
     }
 
-    public void fetch_jobs(){
-        Log.d(TAG, "fetch: ");
+    //fetch offers around default radius of user from firebase
+    public void fetch(){
 
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(user_location.getLatitude(), user_location.getLongitude()), 3);
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+        DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
+        Log.d(TAG, "fetch: " + userId);
+        Query offersQuery = offers_ref.child(userId).child("offers_created");
+        offersQuery.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-
-                Log.d(TAG, "onKeyEntered: " + String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
-
-                DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
-                Query offersQuery = offers_ref.child(key);
-                offersQuery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Job job = dataSnapshot.getValue(Job.class);
-                        if(job != null){
-                            jobs.add(job);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-
-            @Override
-            public void onKeyExited(String key) {
-                System.out.println(String.format("Key %s is no longer in the search area", key));
+            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                items_retrieved++;
+                Job job = dataSnapshot.getValue(Job.class);
+                if(job != null){
+                    jobs.add(job);
+                    initializeAdapter();
+                }
             }
 
             @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                System.out.println(String.format("Key %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude));
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override
-            public void onGeoQueryReady() {
-                System.out.println("All initial data has been loaded and events have been fired!");
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
             }
 
             @Override
-            public void onGeoQueryError(DatabaseError error) {
-                System.err.println("There was an error with this query: " + error);
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
         });
 
     }

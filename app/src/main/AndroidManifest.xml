@@ -39,6 +39,12 @@
         <activity android:name=".authentication.LoginActivity"></activity>
         <activity android:name=".authentication.SignUpActivity"></activity>
         <activity android:name=".job.AddJobActivity"></activity>
+        <activity android:name=".authentication.LogOutActivity">
+            <intent-filter>
+                <action android:name="majd_hamdan.com.easyjob.authentication.LogOutActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
     </application>
 

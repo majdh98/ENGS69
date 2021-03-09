@@ -4,14 +4,22 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,7 +31,13 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -34,13 +48,27 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import majd_hamdan.com.easyjob.ContentActivity;
 import majd_hamdan.com.easyjob.R;
 
+import majd_hamdan.com.easyjob.ViewJobsActivity;
+import majd_hamdan.com.easyjob.adapters.RVAdapter;
 import majd_hamdan.com.easyjob.helper.PermissionUtils;
+import majd_hamdan.com.easyjob.job.AddJobActivity;
+import majd_hamdan.com.easyjob.job.Job;
 
 public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
@@ -50,13 +78,65 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
+    private DatabaseReference geofire_db;
+    private GeoFire geoFire;
     private Location initial_location;
+
+
+    private RecyclerView view;
+    private TextView welcomeMessage;
+    private Button viewJobButtons;
+    private Button addJob;
+    private List<Job> jobs;
+    private ImageButton list_view;
+
+    private int items_queried;
+    private int items_retrieved;
+
+
+    String TAG = "mh";
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_offers, container, false);
+
+        // get ui elements
+        welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
+        viewJobButtons = (Button)returnView.findViewById(R.id.viewJobs);
+        viewJobButtons.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ViewJobsActivity.class));
+            }
+        });
+        addJob = (Button) returnView.findViewById(R.id.createJob);
+        addJob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), AddJobActivity.class));
+            }
+        });
+        list_view = returnView.findViewById(R.id.list_view_button);
+        list_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onListviewClicked(returnView);
+            }
+        });
+
+        // get recycler view
+        view = returnView.findViewById(R.id.recycler);
+        view.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        view.setLayoutManager(llm);
+        items_queried = 0;
+        items_retrieved = 0;
+        initJobs();
+
+
+
         return returnView;
     }
 
@@ -67,6 +147,10 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         //sync the google map fragment
         mapFragment.getMapAsync(this);
+
+
+        geofire_db = FirebaseDatabase.getInstance().getReference().child("geofire");
+        geoFire = new GeoFire(geofire_db);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         createLocationRequest();
@@ -113,13 +197,138 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
+                            initial_location = location;
                             LatLng latLng = new LatLng(location.getLatitude(),
                                     location.getLongitude());
                             // Logic to handle location object
                             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                            fetch_offers();
                         }
                     }
                 });
+    }
+
+    //ListView--------------------------------------------------------------------------------------
+    private void onListviewClicked(View v){
+        ImageButton b = v.findViewById(R.id.list_view_button);
+        if(b.getContentDescription().equals("List View")){
+            v.findViewById(R.id.list_view).setVisibility(View.VISIBLE);
+            v.findViewById(R.id.map_view).setVisibility(View.GONE);
+            b.setImageResource(R.drawable.baseline_map_black_18dp);
+            b.setContentDescription("Map View");
+        }else{
+            v.findViewById(R.id.list_view).setVisibility(View.GONE);
+            v.findViewById(R.id.map_view).setVisibility(View.VISIBLE);
+            b.setImageResource(R.drawable.baseline_article_black_18dp);
+            b.setContentDescription("List View");
+        }
+
+    }
+    private void initJobs(){
+        jobs = new ArrayList<>();
+    }
+
+    private void initializeAdapter(){
+        RVAdapter adapter = new RVAdapter(jobs);
+        view.setAdapter(adapter);
+    }
+
+
+    //Database--------------------------------------------------------------------------------------
+
+    //fetch offers around default radius of user from firebase
+    public void fetch_offers(){
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(initial_location.getLatitude(), initial_location.getLongitude()), 3);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                items_queried++;
+                Log.d(TAG, "onKeyEntered: " + String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
+
+                DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+                Query offersQuery = offers_ref.child(key);
+                offersQuery.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        items_retrieved++;
+                        Log.d(TAG, "onDataChange: ");
+                        Job job = dataSnapshot.getValue(Job.class);
+                        if(job != null){
+                            LatLng job_location = getLocationFromAddress(job.address);
+                            Marker marker = map.addMarker(
+                                    new MarkerOptions()
+                                            .position(job_location)
+                                            .title(job.type)
+                                            .snippet(job.hourlyPay + "/hour"));
+                            marker.showInfoWindow();
+
+                            jobs.add(job);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+
+            @Override
+            public void onKeyExited(String key) {
+                Log.d(TAG, String.format("Key %s is no longer in the search area", key));
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                Log.d(TAG, String.format("Key %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude));
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+                //once the data has been queried, check if the loaded data count equals the
+                //queried data. If not, wait until all data is loaded then initializeAdapter
+
+                if(items_queried == items_retrieved){
+                    initializeAdapter();
+                }else{
+                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onGeoQueryReady();
+                        }
+                    }, 1000);
+                }
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+                Log.d(TAG, "There was an error with this query: " + error);
+            }
+        });
+
+    }
+
+    public LatLng getLocationFromAddress(String address){
+        try {
+            Geocoder selected_place_geocoder = new Geocoder(getContext());
+            List<Address> addresses;
+
+            addresses = selected_place_geocoder.getFromLocationName(address, 1);
+
+            if (addresses == null) {
+                return null;
+            } else {
+                Address location = addresses.get(0);
+                LatLng job_location = new LatLng(location.getLatitude(), location.getLongitude());
+                return job_location;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
 
     }
 

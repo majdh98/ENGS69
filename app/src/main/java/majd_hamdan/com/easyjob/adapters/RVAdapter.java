@@ -1,4 +1,4 @@
-package majd_hamdan.com.easyjob;
+package majd_hamdan.com.easyjob.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.job.Job;
 
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
@@ -20,16 +21,18 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
         CardView cv;
         TextView street;
         TextView townState;
-        ImageView jobPhoto;
+        TextView desctibtion;
         TextView typePay;
+        TextView type;
 
         JobViewHolder(View itemView){
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.jobCard);
             street = (TextView)itemView.findViewById(R.id.streetText);
             townState = (TextView)itemView.findViewById(R.id.townText);
-            jobPhoto = (ImageView)itemView.findViewById(R.id.jobImageView);
+            desctibtion = itemView.findViewById(R.id.description);
             typePay = (TextView)itemView.findViewById(R.id.typePayText);
+            type = itemView.findViewById(R.id.type);
         }
 
     }
@@ -49,17 +52,23 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
 
     @Override
     public void onBindViewHolder(JobViewHolder jobViewHolder, int i){
-        jobViewHolder.street.setText("ssssssssssssss");
-        jobViewHolder.townState.setText("ssssssssssssss");
-        jobViewHolder.jobPhoto.setImageResource(0);
-//        jobViewHolder.typePay.setText(jobs.get(i).type + " - $" + String.valueOf(jobs.get(i).hourlyPay) + "/hr");
-        jobViewHolder.typePay.setText("sssssssssssssss");
+        String[] address_lines = jobs.get(i).address.split(",");
+        String[] state = address_lines[2].split(" ");
+        jobViewHolder.street.setText(address_lines[0]);
+        jobViewHolder.townState.setText(address_lines[1] + ", " + state[1] );
+        jobViewHolder.desctibtion.setText("Describtion: " + jobs.get(i).description);
+        jobViewHolder.typePay.setText("Job Type: " + jobs.get(i).type);
+        jobViewHolder.type.setText("Pay: " + jobs.get(i).hourlyPay + "/hour");
     }
 
     @Override
     public int getItemCount(){
-//        return jobs.size();
-        return 1;
+        return jobs.size();
     }
+
+
+
+
+
 
 }

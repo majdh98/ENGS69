@@ -47,6 +47,7 @@ public class AddJobActivity extends AppCompatActivity  {
     private FirebaseUser firebaseUser;
     private String userId;
     private Location job_location;
+    private String job_address;
     private FusedLocationProviderClient fusedLocationClient;
 
 
@@ -105,11 +106,12 @@ public class AddJobActivity extends AppCompatActivity  {
         String pay = String.valueOf(job_pay.getText());
         String description = job_description.getText().toString();
         String offer_id = database.push().getKey();
+        Log.d(TAG, "onAddJobClicked: "+ offer_id);
         if(getLocationFromAddress()){
-            Job job = new Job(description, type, offer_id , pay, userId);
+            Job job = new Job(description, type, offer_id,  job_address, pay, userId);
             geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
             database.child("offers").child(offer_id).setValue(job);
-            fetch();
+            database.child("users").child(userId).child("offers_created").push().setValue(job);
         }else{
             CharSequence text = "Address can't be found, please enter address in requested format.";
             int duration = Toast.LENGTH_SHORT;
@@ -133,7 +135,8 @@ public class AddJobActivity extends AppCompatActivity  {
                             try {
                                 List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                                 Address address = addresses.get(0);
-                                add = address.getAddressLine(0).split(",");
+                                job_address = address.getAddressLine(0);
+                                add = job_address.split(",");
                                 fill_address_fields(add[0], add[1], address.getAdminArea(), add[3], address.getPostalCode());
                             } catch (IOException e) {
                             }
@@ -187,54 +190,6 @@ public class AddJobActivity extends AppCompatActivity  {
 
     }
 
-    public void fetch(){
-        Log.d(TAG, "fetch: ");
-
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(job_location.getLatitude(), job_location.getLongitude()), 3);
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
-                Query offersQuery = offers_ref.child(key);
-                offersQuery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        Job job = dataSnapshot.getValue(Job.class);
-                        if(job != null){
-                        }
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-
-            @Override
-            public void onKeyExited(String key) {
-                System.out.println(String.format("Key %s is no longer in the search area", key));
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                System.out.println(String.format("Key %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude));
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-                System.out.println("All initial data has been loaded and events have been fired!");
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-                System.err.println("There was an error with this query: " + error);
-            }
-        });
-
-    }
 
 
 
