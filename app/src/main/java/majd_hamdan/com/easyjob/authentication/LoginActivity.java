@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import majd_hamdan.com.easyjob.ContentActivity;
 import majd_hamdan.com.easyjob.R;
+import majd_hamdan.com.easyjob.payment.CheckoutActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        
 
         // hide the action bar at the top
         getSupportActionBar().hide();
