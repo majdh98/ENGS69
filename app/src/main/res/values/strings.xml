@@ -31,6 +31,8 @@
     <string name="phone_number_hint">Phone Number</string>
     <string name="password_confirmation_hint">Confirm Password</string>
     <string name="authenticate">Authenticate</string>
+    <string name="new_pass_hint">Password: Please leave empty to keep your old password</string>
+    <string name="new_pass_confirmation_hint"></string>
 
     <!-- add job-->
     <string name="job_type">Job type</string>

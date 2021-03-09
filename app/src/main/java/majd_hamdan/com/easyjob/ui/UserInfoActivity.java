@@ -79,6 +79,10 @@ public class UserInfoActivity extends AppCompatActivity {
         String email = emailEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
+        User user_info = new User(userId, fn, ln, phone_num, email);
+
+        database.child("users").child(userId).setValue(user_info);
+
         user.updateEmail(email)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
