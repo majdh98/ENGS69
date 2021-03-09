@@ -26,6 +26,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    viewBinding {
+        enabled = true
+    }
 }
 
 //for firebase
@@ -33,6 +36,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 dependencies {
+
 
     // for settings preferences
     implementation 'androidx.preference:preference:1.1.1'
@@ -47,6 +51,10 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    //google pay
+    implementation 'com.google.android.gms:play-services-wallet:18.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
 
     // cardview
     implementation "androidx.cardview:cardview:1.0.0"
@@ -79,6 +87,8 @@ dependencies {
     // want to implement their own geo solution, see:
     // https://firebase.google.com/docs/firestore/solutions/geoqueries
     implementation 'com.firebase:geofire-android-common:3.1.0'
+
+
 
 
 }
