@@ -254,6 +254,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                         Log.d(TAG, "onDataChange: ");
                         Job job = dataSnapshot.getValue(Job.class);
                         if(job != null){
+                            Log.d(TAG, "onDataChange: "+ job.address);
                             LatLng job_location = getLocationFromAddress(job.address);
                             Marker marker = map.addMarker(
                                     new MarkerOptions()
@@ -311,10 +312,9 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public LatLng getLocationFromAddress(String address){
+        List<Address> addresses = null;
         try {
             Geocoder selected_place_geocoder = new Geocoder(getContext());
-            List<Address> addresses;
-
             addresses = selected_place_geocoder.getFromLocationName(address, 1);
 
             if (addresses == null) {
