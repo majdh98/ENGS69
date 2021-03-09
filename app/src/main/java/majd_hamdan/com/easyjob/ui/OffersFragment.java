@@ -266,7 +266,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                                     new MarkerOptions()
                                             .position(job_location)
                                             .title(job.type)
-                                            .snippet(job.hourlyPay + "/hour"));
+                                            .snippet("$"+job.hourlyPay));
                             marker.showInfoWindow();
 
                             jobs.add(job);
