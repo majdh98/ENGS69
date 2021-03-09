@@ -316,6 +316,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         try {
             Geocoder selected_place_geocoder = new Geocoder(getContext());
             addresses = selected_place_geocoder.getFromLocationName(address, 1);
+            Log.d(TAG, "try:" + addresses);
 
             if (addresses == null) {
                 return null;

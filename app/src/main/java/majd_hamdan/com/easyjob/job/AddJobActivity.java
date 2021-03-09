@@ -112,6 +112,7 @@ public class AddJobActivity extends AppCompatActivity  {
             geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
             database.child("offers").child(offer_id).setValue(job);
             database.child("users").child(userId).child("offers_created").push().setValue(job);
+            finish();
         }else{
             CharSequence text = "Address can't be found, please enter address in requested format.";
             int duration = Toast.LENGTH_SHORT;

@@ -7,10 +7,9 @@
     <!-- Account Preferences -->
         <!-- CAN EDIT ANYTIME
              INTENT TO CALL NEW ACTIVITY
-            - Profile Photo
             - First Name
             - Last Name
-            - Phone Number?
+            - Phone Number
             - SAVE, CANCEL BUTTON, DELETE ACCOUNT OPTION
         -->
     <PreferenceCategory
