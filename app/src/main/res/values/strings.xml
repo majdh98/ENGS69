@@ -30,6 +30,7 @@
     <string name="last_name_hint">Lase Name</string>
     <string name="phone_number_hint">Phone Number</string>
     <string name="password_confirmation_hint">Confirm Password</string>
+    <string name="authenticate">Authenticate</string>
 
     <!-- add job-->
     <string name="job_type">Job type</string>

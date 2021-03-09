@@ -243,7 +243,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 items_queried++;
-                Log.d(TAG, "onKeyEntered: " + String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
 
                 DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
                 Query offersQuery = offers_ref.child(key);
@@ -251,10 +250,8 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         items_retrieved++;
-                        Log.d(TAG, "onDataChange: ");
                         Job job = dataSnapshot.getValue(Job.class);
                         if(job != null){
-                            Log.d(TAG, "onDataChange: "+ job.address);
                             LatLng job_location = getLocationFromAddress(job.address);
                             Marker marker = map.addMarker(
                                     new MarkerOptions()
@@ -316,7 +313,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         try {
             Geocoder selected_place_geocoder = new Geocoder(getContext());
             addresses = selected_place_geocoder.getFromLocationName(address, 1);
-            Log.d(TAG, "try:" + addresses);
 
             if (addresses == null) {
                 return null;

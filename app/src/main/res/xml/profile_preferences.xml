@@ -23,7 +23,7 @@
             android:title="Name, Phone Number..."
             android:icon="@drawable/account_circle">
             <intent
-                android:action="majd_hamdan.com.easyjob.authentication.UserInfoctivity">
+                android:action="majd_hamdan.com.easyjob.ui.UserInfoActivity">
             </intent>
         </Preference>
 
