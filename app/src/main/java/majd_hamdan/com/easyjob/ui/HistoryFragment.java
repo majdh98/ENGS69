@@ -136,7 +136,6 @@ public class HistoryFragment extends Fragment {
     public void fetch(){
 
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
-        Log.d(TAG, "fetch: " + userId);
         Query offersQuery = offers_ref.child(userId).child("offers_created");
         offersQuery.addChildEventListener(new ChildEventListener() {
             @Override

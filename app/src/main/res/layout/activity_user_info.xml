@@ -1,6 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="majd_hamdan.com.easyjob.ui.UserInfoActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:id="@+id/authenticateView">
+
+        <ImageView
+            android:layout_width="208dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/signUpText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="103dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="102dp"
+            android:layout_marginBottom="280dp"
+            android:src="@drawable/logocircle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/signUpText"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="97dp"
+            android:layout_marginTop="318dp"
+            android:layout_marginEnd="103dp"
+            android:layout_marginBottom="260dp"
+            android:text="@string/easyjob"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/primaryDarkColor" />
+
+        <EditText
+            android:id="@+id/authEmailField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="345dp"
+            android:ems="10"
+            android:hint="@string/email_hint"
+            android:inputType="textEmailAddress">
+
+            <requestFocus></requestFocus>
+        </EditText>
+
+        <EditText
+            android:id="@+id/authPasswordField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/authEmailField"
+            android:layout_below="@+id/authEmailField"
+            android:ems="10"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword">
+        </EditText>
+
+        <Button
+            android:id="@+id/authenticateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/authPasswordField"
+            android:layout_below="@+id/authPasswordField"
+            android:onClick="onAuthenticateClicked"
+            android:text="@string/authenticate">
+        </Button>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/resetView">
+
+        <ImageView
+            android:id="@+id/easyjob_imageview"
+            android:layout_width="193dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="103dp"
+            android:layout_marginBottom="450dp"
+            android:src="@drawable/logocircle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="100dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginBottom="450dp"
+            android:layout_marginTop="220dp"
+            android:text="@string/easyjob"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/primaryDarkColor" />
+
+        <EditText
+            android:id="@+id/firstNameField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="250dp"
+            android:ems="10"
+            android:hint="@string/first_name_hint"
+            android:inputType="text">
+
+            <requestFocus></requestFocus>
+        </EditText>
+
+        <EditText
+            android:id="@+id/lastNameField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/firstNameField"
+            android:layout_below="@+id/firstNameField"
+            android:ems="10"
+            android:hint="@string/last_name_hint"
+            android:inputType="text">
+        </EditText>
+
+        <EditText
+            android:id="@+id/phoneNumberField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/lastNameField"
+            android:layout_below="@+id/lastNameField"
+            android:ems="10"
+            android:hint="@string/phone_number_hint"
+            android:inputType="phone">
+        </EditText>
+
+        <EditText
+            android:id="@+id/emailField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/phoneNumberField"
+            android:layout_below="@+id/phoneNumberField"
+            android:ems="10"
+            android:hint="@string/email_hint"
+            android:inputType="textEmailAddress">
+        </EditText>
+
+        <EditText
+            android:id="@+id/passwordField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/emailField"
+            android:layout_below="@+id/emailField"
+            android:ems="10"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword">
+        </EditText>
+
+        <EditText
+            android:id="@+id/passwordConfirmationField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/passwordField"
+            android:layout_below="@+id/passwordField"
+            android:ems="10"
+            android:hint="@string/password_confirmation_hint"
+            android:inputType="textPassword">
+        </EditText>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/passwordConfirmationField"
+            android:layout_below="@+id/passwordConfirmationField"
+            android:onClick="onSaveButtonClicked"
+            android:text="@string/sign_up_button_label">
+        </Button>
+
+    </RelativeLayout>
+</RelativeLayout>

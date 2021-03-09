@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/jobCard"
     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
     android:layout_marginVertical="@dimen/activity_vertical_margin"
@@ -11,11 +12,12 @@
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/button">
+    app:layout_constraintTop_toBottomOf="@+id/button"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="269dp"
+        android:layout_height="180dp"
         android:padding="@dimen/activity_horizontal_margin">
 
         <ImageView
@@ -31,10 +33,13 @@
             app:srcCompat="@drawable/baseline_work_black_24dp" />
 
         <TextView
-            android:id="@+id/streetText"
+            android:id="@+id/jobPoster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="43 Main Street"
+            android:layout_marginStart="5dp"
+            android:text="NAME OF POSTER"
+            android:textAllCaps="true"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.049"
@@ -43,63 +48,54 @@
             app:layout_constraintVertical_bias="0.052" />
 
         <TextView
-            android:id="@+id/typePayText"
+            android:id="@+id/jobType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mow Lawn - $15/hr"
+            android:text="Type"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.011"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.852" />
+            app:layout_constraintVertical_bias="0.503" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/jobMoreDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ACCEPT"
+            android:text="MORE DETAILS"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.995" />
+            app:layout_constraintVertical_bias="0.977" />
 
         <TextView
-            android:id="@+id/townText"
+            android:id="@+id/jobAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hanover, NH"
+            android:layout_marginStart="5dp"
+            android:text="Job Address"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.042"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toBottomOf="@+id/streetText"
+            app:layout_constraintTop_toBottomOf="@+id/jobPoster"
             app:layout_constraintVertical_bias="0.019" />
 
         <TextView
-            android:id="@+id/type"
+            android:id="@+id/jobHourlyPay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Hourly Pay"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.496"
-            />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.616" />
+            app:layout_constraintVertical_bias="0.732" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

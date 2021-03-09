@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -88,7 +90,9 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     private Button viewJobButtons;
     private Button addJob;
     private List<Job> jobs;
-    private ImageButton list_view;
+
+    private RadioButton mapToggle;
+    private RadioButton listToggle;
 
     private int items_queried;
     private int items_retrieved;
@@ -103,6 +107,31 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         View returnView = inflater.inflate(R.layout.fragment_offers, container, false);
 
         // get ui elements
+
+        // toggle switch
+        mapToggle = (RadioButton)returnView.findViewById(R.id.Maps);
+        listToggle = (RadioButton)returnView.findViewById(R.id.offer);
+
+        mapToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listToggle.setSelected(false);
+                mapToggle.setSelected(true);
+                returnView.findViewById(R.id.list_view).setVisibility(View.GONE);
+                returnView.findViewById(R.id.map_view).setVisibility(View.VISIBLE);
+            }
+        });
+
+        listToggle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                listToggle.setSelected(true);
+                mapToggle.setSelected(false);
+                returnView.findViewById(R.id.list_view).setVisibility(View.VISIBLE);
+                returnView.findViewById(R.id.map_view).setVisibility(View.GONE);
+            }
+        });
+
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
         viewJobButtons = (Button)returnView.findViewById(R.id.viewJobs);
         viewJobButtons.setOnClickListener(new View.OnClickListener() {
@@ -116,13 +145,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), AddJobActivity.class));
-            }
-        });
-        list_view = returnView.findViewById(R.id.list_view_button);
-        list_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onListviewClicked(returnView);
             }
         });
 
@@ -209,21 +231,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     }
 
     //ListView--------------------------------------------------------------------------------------
-    private void onListviewClicked(View v){
-        ImageButton b = v.findViewById(R.id.list_view_button);
-        if(b.getContentDescription().equals("List View")){
-            v.findViewById(R.id.list_view).setVisibility(View.VISIBLE);
-            v.findViewById(R.id.map_view).setVisibility(View.GONE);
-            b.setImageResource(R.drawable.baseline_map_black_18dp);
-            b.setContentDescription("Map View");
-        }else{
-            v.findViewById(R.id.list_view).setVisibility(View.GONE);
-            v.findViewById(R.id.map_view).setVisibility(View.VISIBLE);
-            b.setImageResource(R.drawable.baseline_article_black_18dp);
-            b.setContentDescription("List View");
-        }
-
-    }
     private void initJobs(){
         jobs = new ArrayList<>();
     }
@@ -254,7 +261,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                         Log.d(TAG, "onDataChange: ");
                         Job job = dataSnapshot.getValue(Job.class);
                         if(job != null){
-                            Log.d(TAG, "onDataChange: "+ job.address);
                             LatLng job_location = getLocationFromAddress(job.address);
                             Marker marker = map.addMarker(
                                     new MarkerOptions()
@@ -312,11 +318,11 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public LatLng getLocationFromAddress(String address){
-        List<Address> addresses = null;
         try {
             Geocoder selected_place_geocoder = new Geocoder(getContext());
+            List<Address> addresses;
+
             addresses = selected_place_geocoder.getFromLocationName(address, 1);
-            Log.d(TAG, "try:" + addresses);
 
             if (addresses == null) {
                 return null;
