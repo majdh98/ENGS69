@@ -3,6 +3,7 @@ package majd_hamdan.com.easyjob.authentication;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import majd_hamdan.com.easyjob.ContentActivity;
 import majd_hamdan.com.easyjob.R;
@@ -24,7 +28,16 @@ public class SignUpActivity extends AppCompatActivity {
     protected EditText emailEditText;
     protected EditText passwordEditText;
     protected Button singupButton;
+    protected EditText confirmPassword;
+    protected EditText firstName;
+    protected EditText lastName;
+    protected EditText phoneNumber;
+
+
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference database;
+
+    String TAG = "mh";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +54,14 @@ public class SignUpActivity extends AppCompatActivity {
         emailEditText = (EditText) findViewById(R.id.emailField);
         passwordEditText = (EditText) findViewById(R.id.passwordField);
         singupButton = (Button) findViewById(R.id.singupButton);
+        confirmPassword = (EditText) findViewById(R.id.passwordConfirmationField);
+        firstName = (EditText) findViewById(R.id.firstNameField);
+        lastName = (EditText) findViewById(R.id.lastNameField);
+        phoneNumber = (EditText) findViewById(R.id.phoneNumberField);
+
+        //initiate connection to db
+        database = FirebaseDatabase.getInstance().getReference();
+
 
     }
 
@@ -63,6 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                save_user_info();
                                 Intent intent = new Intent(SignUpActivity.this, ContentActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -76,6 +98,21 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                     });
         }
+
+    }
+
+    public void save_user_info(){
+        String userId;
+        String fn = firstName.getText().toString();
+        String ln = lastName.getText().toString();
+        String phonenum = phoneNumber.getText().toString();
+
+        //get user id
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        userId = firebaseUser.getUid();
+        database.child("users").child(userId).child("offers_created").push().setValue(job);
+        
 
     }
 }

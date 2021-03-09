@@ -26,6 +26,10 @@
     <string name="title_activity_login">Sign in</string>
     <string name="add_item">Add New Item</string>
     <string name="action_logout">Logout</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="last_name_hint">Lase Name</string>
+    <string name="phone_number_hint">Phone Number</string>
+    <string name="password_confirmation_hint">Confirm Password</string>
 
     <!-- add job-->
     <string name="job_type">Job type</string>
@@ -42,11 +46,6 @@
     <string name="state_hint">NY, CA, VT,...</string>
     <string name="description">Description</string>
     <string name="easyjob">EasyJob</string>
-
-    <!-- sign up user info-->
-    <string name="first_name_hint">First Name</string>
-    <string name="last_name_hint">Lase Name</string>
-    <string name="Phone_number_hint">First Name</string>
 
     <!-- Checkout -->
     <string name="googlepay_status_unavailable">Unfortunately, Google Pay is not available on this device.</string>
