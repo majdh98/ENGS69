@@ -2,7 +2,7 @@ package majd_hamdan.com.easyjob.job;
 
 import android.location.Location;
 
-import com.firebase.geofire.GeoLocation;
+
 
 public class Job {
 

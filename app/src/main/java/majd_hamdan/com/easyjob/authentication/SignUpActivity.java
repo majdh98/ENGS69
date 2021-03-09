@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import majd_hamdan.com.easyjob.ContentActivity;
 import majd_hamdan.com.easyjob.R;
+import majd_hamdan.com.easyjob.payment.CheckoutActivity;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference database;
+    private String user_email;
 
     String TAG = "mh";
 
@@ -69,6 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
         //get password and email and trim them
         String password = passwordEditText.getText().toString();
         String email = emailEditText.getText().toString();
+        user_email = email;
         password = password.trim();
         email = email.trim();
 
@@ -102,6 +105,8 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void save_user_info(){
+
+
         String userId;
         String fn = firstName.getText().toString();
         String ln = lastName.getText().toString();
@@ -111,8 +116,10 @@ public class SignUpActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         userId = firebaseUser.getUid();
-        database.child("users").child(userId).child("offers_created").push().setValue(job);
-        
+
+        User user = new User(userId, fn, ln, phonenum, user_email);
+        database.child("users").child(userId).setValue(user);
+
 
     }
 }
