@@ -33,6 +33,10 @@
     <string name="authenticate">Authenticate</string>
     <string name="new_pass_hint">Password: Please leave empty to keep your old password</string>
     <string name="new_pass_confirmation_hint"></string>
+    <string name="user_info_save">Save</string>
+    <string name="user_info_hint">Any field you leave empty will now be updated!</string>
+    <string name="delete_button">Delete Account</string>
+    <string name="account_deleted">Account Deleted</string>
 
     <!-- add job-->
     <string name="job_type">Job type</string>

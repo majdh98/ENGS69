@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,8 +10,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="majd_hamdan.com.easyjob.ui.UserInfoActivity">
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -83,118 +83,134 @@
     </RelativeLayout>
 
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:visibility="gone"
-        android:id="@+id/resetView">
+        android:id="@+id/resetView"
+        tools:context="majd_hamdan.com.easyjob.ui.UserInfoActivity">
 
-        <ImageView
-            android:id="@+id/easyjob_imageview"
-            android:layout_width="193dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="100dp"
-            android:layout_marginEnd="103dp"
-            android:layout_marginBottom="450dp"
-            android:src="@drawable/logocircle" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="100dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginBottom="450dp"
-            android:layout_marginTop="220dp"
-            android:text="@string/easyjob"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/primaryDarkColor" />
-
-        <EditText
-            android:id="@+id/firstNameField"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="250dp"
-            android:ems="10"
-            android:hint="@string/first_name_hint"
-            android:inputType="text">
+            android:layout_height="match_parent">
 
-            <requestFocus></requestFocus>
-        </EditText>
 
-        <EditText
-            android:id="@+id/lastNameField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/firstNameField"
-            android:layout_below="@+id/firstNameField"
-            android:ems="10"
-            android:hint="@string/last_name_hint"
-            android:inputType="text">
-        </EditText>
+            <ImageView
+                android:id="@+id/easyjob_imageview"
+                android:layout_width="158dp"
+                android:layout_height="266dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="105dp"
+                android:layout_marginTop="-38dp"
+                android:layout_marginEnd="116dp"
+                android:layout_marginBottom="450dp"
+                android:src="@drawable/logocircle" />
 
-        <EditText
-            android:id="@+id/phoneNumberField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/lastNameField"
-            android:layout_below="@+id/lastNameField"
-            android:ems="10"
-            android:hint="@string/phone_number_hint"
-            android:inputType="phone">
-        </EditText>
+            <TextView
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="174dp"
+                android:layout_marginEnd="50dp"
+                android:text="@string/user_info_hint"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/primaryDarkColor"></TextView>
 
-        <EditText
-            android:id="@+id/emailField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/phoneNumberField"
-            android:layout_below="@+id/phoneNumberField"
-            android:ems="10"
-            android:hint="@string/email_hint"
-            android:inputType="textEmailAddress">
-        </EditText>
+            <EditText
+                android:id="@+id/firstNameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="234dp"
+                android:ems="10"
+                android:hint="@string/first_name_hint"
+                android:inputType="text">
 
-        <EditText
-            android:id="@+id/passwordField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/emailField"
-            android:layout_below="@+id/emailField"
-            android:ems="10"
-            android:hint="@string/password_hint"
-            android:inputType="textPassword">
-        </EditText>
+                <requestFocus></requestFocus>
+            </EditText>
 
-        <EditText
-            android:id="@+id/passwordConfirmationField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/passwordField"
-            android:layout_below="@+id/passwordField"
-            android:ems="10"
-            android:hint="@string/password_confirmation_hint"
-            android:inputType="textPassword">
-        </EditText>
+            <EditText
+                android:id="@+id/lastNameField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/firstNameField"
+                android:layout_below="@+id/firstNameField"
+                android:ems="10"
+                android:hint="@string/last_name_hint"
+                android:inputType="text">
+            </EditText>
 
-        <Button
-            android:id="@+id/save_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/passwordConfirmationField"
-            android:layout_below="@+id/passwordConfirmationField"
-            android:onClick="onSaveButtonClicked"
-            android:text="@string/sign_up_button_label">
-        </Button>
+            <EditText
+                android:id="@+id/phoneNumberField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/lastNameField"
+                android:layout_below="@+id/lastNameField"
+                android:ems="10"
+                android:hint="@string/phone_number_hint"
+                android:inputType="phone">
+            </EditText>
 
-    </RelativeLayout>
+            <EditText
+                android:id="@+id/emailField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/phoneNumberField"
+                android:layout_below="@+id/phoneNumberField"
+                android:ems="10"
+                android:hint="@string/email_hint"
+                android:inputType="textEmailAddress">
+            </EditText>
+
+            <EditText
+                android:id="@+id/passwordField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/emailField"
+                android:layout_below="@+id/emailField"
+                android:ems="10"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword">
+            </EditText>
+
+            <EditText
+                android:id="@+id/passwordConfirmationField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/passwordField"
+                android:layout_below="@+id/passwordField"
+                android:ems="10"
+                android:hint="@string/password_confirmation_hint"
+                android:inputType="textPassword">
+            </EditText>
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/passwordConfirmationField"
+                android:layout_below="@+id/passwordConfirmationField"
+                android:onClick="onSaveButtonClicked"
+                android:text="@string/user_info_save">
+            </Button>
+
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/save_button"
+                android:layout_below="@+id/save_button"
+                android:onClick="onDeleteButtonClicked"
+                android:text="@string/delete_button">
+            </Button>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

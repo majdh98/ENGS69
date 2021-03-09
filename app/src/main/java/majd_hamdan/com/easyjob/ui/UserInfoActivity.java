@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,6 +48,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private DatabaseReference database;
     private FirebaseUser user;
     private String userId;
+    private User userInfo;
 
 
 
@@ -74,33 +76,52 @@ public class UserInfoActivity extends AppCompatActivity {
 
     public void onSaveButtonClicked(View view) {
         String fn = firstName.getText().toString();
+        if(fn.isEmpty()){
+            fn = userInfo.firstName;
+        }
         String ln = lastName.getText().toString();
+        if(fn.isEmpty()){
+            fn = userInfo.lastName;
+        }
         String phone_num = phoneNumber.getText().toString();
+        if(phone_num.isEmpty()){
+            phone_num = userInfo.phoneNumber;
+        }
         String email = emailEditText.getText().toString();
+        if(!email.isEmpty()){
+            user.updateEmail(email)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                            }
+                        }
+                    });
+        }else{
+            email = userInfo.email;
+        }
         String password = passwordEditText.getText().toString();
+        //check password and email then create use
+        if (!password.isEmpty()) {
+            user.updatePassword(password)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+
+                            }
+                        }
+                    });
+        }
 
         User user_info = new User(userId, fn, ln, phone_num, email);
-
         database.child("users").child(userId).setValue(user_info);
-
-        user.updateEmail(email)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "User email address updated.");
-                        }
-                    }
-                });
-
-
-
+        finish();
     }
 
     public void set_user_info_to_db_info(){
 
         //get user id
-
         userId = user.getUid();
 
 
@@ -111,6 +132,7 @@ public class UserInfoActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user  = dataSnapshot.getValue(User.class);
                 if(user != null){
+                    userInfo = user;
                     firstName.setText(user.firstName);
                     lastName.setText(user.lastName);
                     emailEditText.setText(user.email);
@@ -172,17 +194,23 @@ public class UserInfoActivity extends AppCompatActivity {
 
 
     }
+
+    public void onDeleteButtonClicked(View view) {
+        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(UserInfoActivity.this, R.string.permission_required_toast,
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    public void loadLogIn(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 }
-
-
-//    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//
-//user.updateEmail("user@example.com")
-//        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//@Override
-//public void onComplete(@NonNull Task<Void> task) {
-//        if (task.isSuccessful()) {
-//        Log.d(TAG, "User email address updated.");
-//        }
-//        }
-//        });
