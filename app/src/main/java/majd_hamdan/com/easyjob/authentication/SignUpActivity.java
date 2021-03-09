@@ -105,8 +105,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void save_user_info(){
-
-
         String userId;
         String fn = firstName.getText().toString();
         String ln = lastName.getText().toString();

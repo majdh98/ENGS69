@@ -54,6 +54,13 @@
 
         <activity android:name=".payment.CheckoutActivity"></activity>
 
+        <activity android:name=".ui.UserInfoActivity">
+            <intent-filter>
+                <action android:name="majd_hamdan.com.easyjob.ui.UserInfoActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
 
     </application>
 

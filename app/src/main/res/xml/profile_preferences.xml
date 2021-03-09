@@ -22,8 +22,8 @@
             android:summary="Edit Profile"
             android:title="Name, Phone Number..."
             android:icon="@drawable/account_circle">
-            <intent>
-                <!-- todo: add intent leading to profile activity -->
+            <intent
+                android:action="majd_hamdan.com.easyjob.authentication.UserInfoctivity">
             </intent>
         </Preference>
 
