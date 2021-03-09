@@ -101,18 +101,37 @@ public class AddJobActivity extends AppCompatActivity  {
 
     }
 
+
+
     public void onAddJobClicked(View view){
         String type = job_type.getText().toString();
+
         String pay = String.valueOf(job_pay.getText());
         String description = job_description.getText().toString();
         String offer_id = database.push().getKey();
         Log.d(TAG, "onAddJobClicked: "+ offer_id);
         if(getLocationFromAddress()){
-            Job job = new Job(description, type, offer_id,  job_address, pay, userId);
-            geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
-            database.child("offers").child(offer_id).setValue(job);
-            database.child("users").child(userId).child("offers_created").push().setValue(job);
-            finish();
+            if(!checkInfo()){
+                Job job = new Job(description, type, offer_id,  job_address, pay, userId);
+                geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
+                database.child("offers").child(offer_id).setValue(job);
+                database.child("users").child(userId).child("offers_created").push().setValue(job);
+                finish();
+            }
+            else{
+                String address = address_field.getText().toString();
+                String zip = zipcode_field.getText().toString();
+                String state = state_field.getText().toString();
+                String country = state_field.getText().toString();
+
+                String[] info = new String[]{type, pay, description, address, zip, state, country};
+                String[] tags = new String[]{"Job Type", "Pay", "Description", "Address", "City", "State", "Zip Code", "Country"};
+
+                String toast = makeToast(info, tags);
+                Toast toast_it = Toast.makeText(this, toast, Toast.LENGTH_SHORT);
+                toast_it.show();
+            }
+
         }else{
             CharSequence text = "Address can't be found, please enter address in requested format.";
             int duration = Toast.LENGTH_SHORT;
@@ -120,6 +139,34 @@ public class AddJobActivity extends AppCompatActivity  {
             toast.show();
         }
 
+    }
+
+    public boolean checkInfo(){
+        String type = job_type.getText().toString();
+        String pay = String.valueOf(job_pay.getText());
+        String description = job_description.getText().toString();
+        String address = address_field.getText().toString();
+        String zip = zipcode_field.getText().toString();
+        String state = state_field.getText().toString();
+        String country = state_field.getText().toString();
+        return type.length() == 0 || pay.length() == 0 || description.length() == 0 || address.length() == 0 ||
+                zip.length() == 0 || state.length() == 0 || country.length() == 0;
+    }
+
+    public String makeToast(String[] info, String[] tags){
+        StringBuilder toast = new StringBuilder();
+
+        for(int i = 0; i < info.length; i++){
+
+            if( toast.toString().length() == 0 && info[i].length() == 0){
+                toast.append(tags[i]);
+            }
+            else if(info[i].length() == 0){
+                toast.append(", ").append(tags[i]);
+            }
+        }
+
+        return "fill in " + toast.toString() + " information";
     }
 
     @SuppressLint("MissingPermission")
