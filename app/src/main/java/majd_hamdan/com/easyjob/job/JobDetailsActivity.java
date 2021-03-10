@@ -196,7 +196,7 @@ public class JobDetailsActivity extends AppCompatActivity {
             worker.setVisibility(View.VISIBLE);
             fetch_user_info(worker, job.worker_id);
         }else{
-            if(job.isAvaliable){
+            if(!job.isAvaliable){
                 job_description.setEnabled(false);
                 job_pay.setEnabled(false);
                 job_type.setEnabled(false);
@@ -325,5 +325,26 @@ public class JobDetailsActivity extends AppCompatActivity {
         finish();
 
     }
+
+    public void onSaveClicked(View view){
+        finish();
+    }
+
+    public void onDeleteButtonClicked(View view){
+
+        //remove offer from offers c
+        DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+        offers_ref.child(job.location_key).removeValue();
+
+        //remove offer from user created
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        users_ref.child(job.creator_id).child("offers_created").child(job.location_key).removeValue();
+
+        Toast toast = Toast.makeText(this, "You have deleted a Job!", Toast.LENGTH_SHORT);
+        toast.show();
+        finish();
+    }
+
+
 
 }

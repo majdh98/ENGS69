@@ -336,19 +336,22 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
 
             @Override
             public void onKeyExited(String key) {
+                jobs = new ArrayList<>();
+                initializeAdapter();
+                fetch_offers();
                 Log.d(TAG, String.format("Key %s is no longer in the search area", key));
             }
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
+                jobs = new ArrayList<>();
+                initializeAdapter();
+                fetch_offers();
                 Log.d(TAG, String.format("Key %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude));
             }
 
             @Override
             public void onGeoQueryReady() {
-
-                Log.d(TAG, "onGeoQueryReady: ssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
-
                 //once the data has been queried, check if the loaded data count equals the
                 //queried data. If not, wait until all data is loaded then initializeAdapter
 
@@ -370,6 +373,9 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
 
             @Override
             public void onGeoQueryError(DatabaseError error) {
+                jobs = new ArrayList<>();
+                initializeAdapter();
+                fetch_offers();
                 Log.d(TAG, "There was an error with this query: " + error);
             }
         });
