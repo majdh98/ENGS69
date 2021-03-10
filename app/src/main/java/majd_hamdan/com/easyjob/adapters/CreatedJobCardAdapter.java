@@ -106,7 +106,7 @@ public class CreatedJobCardAdapter extends RecyclerView.Adapter<CreatedJobCardAd
         // check whether or not the job has been taken
         if(!jobs.get(i).isAvaliable){
             // if the job has not yet been taken
-            holder.jobTaken.setText("Not yet");
+            holder.jobTaken.setText("Job taken: Not yet");
             holder.jobTakenBy.setVisibility(View.GONE);
         } else {
             // if the job has been taken
