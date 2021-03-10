@@ -53,6 +53,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +82,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     private DatabaseReference geofire_db;
     private GeoFire geoFire;
     private Location initial_location;
+    private ClusterManager<MapItem> clusterManager;
 
 
     private RecyclerView view;
@@ -117,7 +120,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
 
         // fetch user information to update welcome message
-        fetch_user_info_for_welcome(welcomeMessage, null);
+        fetch_user_info_for_welcome(welcomeMessage);
 
 
         // toggle switch
@@ -228,6 +231,11 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                                     location.getLongitude());
                             // Logic to handle location object
                             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
+                            clusterManager = new ClusterManager<MapItem>(getContext(), map);
+                            map.setOnCameraIdleListener(clusterManager);
+                            map.setOnMarkerClickListener(clusterManager);
+
                             fetch_offers();
                         }
                     }
@@ -255,7 +263,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
 
     //Database--------------------------------------------------------------------------------------
-    public static void fetch_user_info_for_welcome(TextView toSetWelcome, TextView fullName){
+    public static void fetch_user_info_for_welcome(TextView toSetWelcome){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(userId);
@@ -266,11 +274,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 if (user != null) {
                     // get ui element for welcome message and populate with user info
                     toSetWelcome.setText("Hello, " + user.firstName);
-
-                    // can set the user name if that is necessary
-                    if (fullName != null){
-                        fullName.setText(user.firstName + " " + user.lastName);
-                    }
                 }
             }
 
@@ -351,19 +354,66 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         });
 
     }
+
+    
     
     public void populate_map(){
         Log.d(TAG, "populate_map: ");
         for(int i = 0; i<jobs.size(); i++){
+            //            LatLng job_location = getLocationFromAddress(jobs.get(i).address);
+            //            Marker marker = map.addMarker(
+            //                    new MarkerOptions()
+            //                            .position(job_location)
+            //                            .title(jobs.get(i).type)
+            //                            .snippet("$"+jobs.get(i).hourlyPay));
+            //            marker.showInfoWindow();
+
             LatLng job_location = getLocationFromAddress(jobs.get(i).address);
-            Marker marker = map.addMarker(
-                    new MarkerOptions()
-                            .position(job_location)
-                            .title(jobs.get(i).type)
-                            .snippet("$"+jobs.get(i).hourlyPay));
-            marker.showInfoWindow();
+            double lat = job_location.latitude;
+            double lng = job_location.longitude;
+            MapItem newItem = new MapItem(lat, lng, jobs.get(i).type, "$"+jobs.get(i).hourlyPay);
+            clusterManager.addItem(newItem);
+
+
+            // todo: cluster items?
         }
+
         
+    }
+
+    // to help with map clustering for markers
+    private class MapItem implements ClusterItem {
+        private double latitude;
+        private double longitude;
+
+        private final LatLng position;
+        private final String title;
+        private final String snippet;
+
+        public MapItem(double lat, double lng, String title, String snippet) {
+            latitude = lat;
+            longitude = lng;
+            position = new LatLng(lat, lng);
+            this.title = title;
+            this.snippet = snippet;
+        }
+
+        @Override
+        public LatLng getPosition() {
+            return position;
+        }
+
+        @Override
+        public String getTitle() {
+            return title;
+        }
+
+        @Override
+        public String getSnippet() {
+            return snippet;
+        }
+
+
     }
 
     public LatLng getLocationFromAddress(String address){
