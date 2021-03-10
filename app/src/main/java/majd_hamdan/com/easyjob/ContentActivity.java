@@ -22,8 +22,6 @@ import majd_hamdan.com.easyjob.ui.ProfileFragment;
 public class ContentActivity extends AppCompatActivity {
 
     String TAG = "mh";
-//    public String NAV_Host_Frag_Tag = "navhosttag";
-//    Fragment navHostFragment;
 
     private Fragment offers_fragment;
     private Fragment history_fragment;
