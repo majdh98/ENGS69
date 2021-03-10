@@ -9,7 +9,7 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.List;
 
-import majd_hamdan.com.easyjob.adapters.RvAdapterControl;
+import majd_hamdan.com.easyjob.adapters.CreatedJobCardAdapter;
 import majd_hamdan.com.easyjob.job.Job;
 
 public class ViewJobsActivity extends AppCompatActivity {
@@ -47,7 +47,7 @@ public class ViewJobsActivity extends AppCompatActivity {
     }
 
     private void initializeAdapter(){
-        RvAdapterControl adapter = new RvAdapterControl(jobs);
+        CreatedJobCardAdapter adapter = new CreatedJobCardAdapter(jobs);
         view.setAdapter(adapter);
     }
 }

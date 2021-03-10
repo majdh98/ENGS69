@@ -70,6 +70,8 @@ public class AddJobActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_job);
 
+        setTitle("Create a Job");
+
         //initialize firebase db and user id
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -101,6 +103,9 @@ public class AddJobActivity extends AppCompatActivity  {
 
     }
 
+    public void onCancelClicked(View view){
+        finish();
+    }
 
 
     public void onAddJobClicked(View view){

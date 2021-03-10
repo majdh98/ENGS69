@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,17 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import androidx.appcompat.widget.SwitchCompat;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -51,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,10 +58,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import majd_hamdan.com.easyjob.ContentActivity;
+import majd_hamdan.com.easyjob.MainActivity;
 import majd_hamdan.com.easyjob.R;
 
-import majd_hamdan.com.easyjob.ViewJobsActivity;
-import majd_hamdan.com.easyjob.adapters.RVAdapter;
+import majd_hamdan.com.easyjob.adapters.GeneralJobCardAdapter;
+import majd_hamdan.com.easyjob.authentication.User;
 import majd_hamdan.com.easyjob.helper.PermissionUtils;
 import majd_hamdan.com.easyjob.job.AddJobActivity;
 import majd_hamdan.com.easyjob.job.Job;
@@ -88,41 +85,65 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     private Button viewJobButtons;
     private Button addJob;
     private List<Job> jobs;
-    private ImageButton list_view;
+
+    private RadioButton mapToggle;
+    private RadioButton listToggle;
 
     private int items_queried;
     private int items_retrieved;
 
+    private String userFirstName;
+
 
     String TAG = "mh";
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_offers, container, false);
 
-        // get ui elements
-        welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
-        viewJobButtons = (Button)returnView.findViewById(R.id.viewJobs);
-        viewJobButtons.setOnClickListener(new View.OnClickListener() {
+        // fetch user information
+        fetch_user_info(returnView);
+
+        // GET UI ELEMENTS
+
+        // toggle switch
+        mapToggle = (RadioButton)returnView.findViewById(R.id.Maps);
+        listToggle = (RadioButton)returnView.findViewById(R.id.offer);
+
+
+        mapToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ViewJobsActivity.class));
+                listToggle.setSelected(false);
+                mapToggle.setSelected(true);
+                returnView.findViewById(R.id.list_view).setVisibility(View.GONE);
+                returnView.findViewById(R.id.map_view).setVisibility(View.VISIBLE);
             }
         });
+
+        listToggle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                listToggle.setSelected(true);
+                mapToggle.setSelected(false);
+                returnView.findViewById(R.id.list_view).setVisibility(View.VISIBLE);
+                returnView.findViewById(R.id.map_view).setVisibility(View.GONE);
+            }
+        });
+
+        welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
         addJob = (Button) returnView.findViewById(R.id.createJob);
         addJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), AddJobActivity.class));
-            }
-        });
-        list_view = returnView.findViewById(R.id.list_view_button);
-        list_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onListviewClicked(returnView);
             }
         });
 
@@ -139,6 +160,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
         return returnView;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -209,32 +231,41 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     }
 
     //ListView--------------------------------------------------------------------------------------
-    private void onListviewClicked(View v){
-        ImageButton b = v.findViewById(R.id.list_view_button);
-        if(b.getContentDescription().equals("List View")){
-            v.findViewById(R.id.list_view).setVisibility(View.VISIBLE);
-            v.findViewById(R.id.map_view).setVisibility(View.GONE);
-            b.setImageResource(R.drawable.baseline_map_black_18dp);
-            b.setContentDescription("Map View");
-        }else{
-            v.findViewById(R.id.list_view).setVisibility(View.GONE);
-            v.findViewById(R.id.map_view).setVisibility(View.VISIBLE);
-            b.setImageResource(R.drawable.baseline_article_black_18dp);
-            b.setContentDescription("List View");
-        }
-
-    }
     private void initJobs(){
         jobs = new ArrayList<>();
     }
 
     private void initializeAdapter(){
-        RVAdapter adapter = new RVAdapter(jobs);
+        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(jobs);
         view.setAdapter(adapter);
     }
 
 
     //Database--------------------------------------------------------------------------------------
+    public void fetch_user_info(View view){
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        Query userQuery = users_ref.child(userId);
+        userQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    userFirstName = user.firstName;
+
+                    // get ui element for welcome message and populate with user info
+                    welcomeMessage = (TextView)view.findViewById(R.id.welcome);
+                    welcomeMessage.setText("Hello, " + userFirstName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     //fetch offers around default radius of user from firebase
     public void fetch_offers(){
@@ -242,36 +273,28 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                items_queried++;
-                Log.d(TAG, "onKeyEntered: " + String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
+                if(getContext() != null){
+                    items_queried++;
 
-                DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
-                Query offersQuery = offers_ref.child(key);
-                offersQuery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        items_retrieved++;
-                        Log.d(TAG, "onDataChange: ");
-                        Job job = dataSnapshot.getValue(Job.class);
-                        if(job != null){
-                            Log.d(TAG, "onDataChange: "+ job.address);
-                            LatLng job_location = getLocationFromAddress(job.address);
-                            Marker marker = map.addMarker(
-                                    new MarkerOptions()
-                                            .position(job_location)
-                                            .title(job.type)
-                                            .snippet(job.hourlyPay + "/hour"));
-                            marker.showInfoWindow();
-
-                            jobs.add(job);
+                    DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+                    Query offersQuery = offers_ref.child(key);
+                    offersQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            items_retrieved++;
+                            Job job = dataSnapshot.getValue(Job.class);
+                            if(job != null){
+                                jobs.add(job);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
 
 
@@ -292,7 +315,11 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 //queried data. If not, wait until all data is loaded then initializeAdapter
 
                 if(items_queried == items_retrieved){
+                    //populate list
                     initializeAdapter();
+                    
+                    //populate map
+                    populate_map();
                 }else{
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
@@ -310,13 +337,27 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         });
 
     }
+    
+    public void populate_map(){
+        Log.d(TAG, "populate_map: ");
+        for(int i = 0; i<jobs.size(); i++){
+            LatLng job_location = getLocationFromAddress(jobs.get(i).address);
+            Marker marker = map.addMarker(
+                    new MarkerOptions()
+                            .position(job_location)
+                            .title(jobs.get(i).type)
+                            .snippet("$"+jobs.get(i).hourlyPay));
+            marker.showInfoWindow();
+        }
+        
+    }
 
     public LatLng getLocationFromAddress(String address){
-        List<Address> addresses = null;
         try {
-            Geocoder selected_place_geocoder = new Geocoder(getContext());
+            Geocoder selected_place_geocoder = new Geocoder(getActivity());
+            List<Address> addresses;
+
             addresses = selected_place_geocoder.getFromLocationName(address, 1);
-            Log.d(TAG, "try:" + addresses);
 
             if (addresses == null) {
                 return null;
