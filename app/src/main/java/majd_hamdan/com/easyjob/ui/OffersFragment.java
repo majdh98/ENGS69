@@ -57,6 +57,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import majd_hamdan.com.easyjob.ContentActivity;
+import majd_hamdan.com.easyjob.MainActivity;
 import majd_hamdan.com.easyjob.R;
 
 import majd_hamdan.com.easyjob.adapters.GeneralJobCardAdapter;
@@ -264,35 +266,39 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                items_queried++;
-                Log.d(TAG, "onKeyEntered: " + String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
+                if(getContext() != null){
+                    items_queried++;
+                    Log.d(TAG, "onKeyEntered: " + String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
 
-                DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
-                Query offersQuery = offers_ref.child(key);
-                offersQuery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        items_retrieved++;
-                        Log.d(TAG, "onDataChange: ");
-                        Job job = dataSnapshot.getValue(Job.class);
-                        if(job != null){
-                            LatLng job_location = getLocationFromAddress(job.address);
-                            Marker marker = map.addMarker(
-                                    new MarkerOptions()
-                                            .position(job_location)
-                                            .title(job.type)
-                                            .snippet(job.hourlyPay + "/hour"));
-                            marker.showInfoWindow();
+                    DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+                    Query offersQuery = offers_ref.child(key);
+                    offersQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            items_retrieved++;
+                            Log.d(TAG, "onDataChange: " + items_retrieved);
+                            Job job = dataSnapshot.getValue(Job.class);
+                            if(job != null){
+//                                LatLng job_location = getLocationFromAddress(job.address);
+//                                Marker marker = map.addMarker(
+//                                        new MarkerOptions()
+//                                                .position(job_location)
+//                                                .title(job.type)
+//                                                .snippet("$"+job.hourlyPay));
+//                                marker.showInfoWindow();
 
-                            jobs.add(job);
+                                jobs.add(job);
+//                                initializeAdapter();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
 
 
@@ -313,7 +319,11 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 //queried data. If not, wait until all data is loaded then initializeAdapter
 
                 if(items_queried == items_retrieved){
+                    //populate list
                     initializeAdapter();
+                    
+                    //populate map
+                    populate_map();
                 }else{
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
@@ -331,10 +341,24 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         });
 
     }
+    
+    public void populate_map(){
+        Log.d(TAG, "populate_map: ");
+        for(int i = 0; i<jobs.size(); i++){
+            LatLng job_location = getLocationFromAddress(jobs.get(i).address);
+            Marker marker = map.addMarker(
+                    new MarkerOptions()
+                            .position(job_location)
+                            .title(jobs.get(i).type)
+                            .snippet("$"+jobs.get(i).hourlyPay));
+            marker.showInfoWindow();
+        }
+        
+    }
 
     public LatLng getLocationFromAddress(String address){
         try {
-            Geocoder selected_place_geocoder = new Geocoder(getContext());
+            Geocoder selected_place_geocoder = new Geocoder(getActivity());
             List<Address> addresses;
 
             addresses = selected_place_geocoder.getFromLocationName(address, 1);
