@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,7 @@ public class HistoryFragment extends Fragment {
 
         // get ui elements
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
-        current = (RadioButton)returnView.findViewById(R.id.Maps);
+        current = (RadioButton)returnView.findViewById(R.id.current);
         created = (RadioButton)returnView.findViewById(R.id.created);
         past = (RadioButton)returnView.findViewById(R.id.past);
 
@@ -90,9 +91,9 @@ public class HistoryFragment extends Fragment {
                 current.setSelected(true);
                 created.setSelected(false);
                 past.setSelected(false);
-                returnView.findViewById(R.id.currentRecycler).setVisibility(View.VISIBLE);
-                returnView.findViewById(R.id.createdRecycler).setVisibility(View.GONE);
-                returnView.findViewById(R.id.pastRecycler).setVisibility(View.GONE);
+                returnView.findViewById(R.id.currentView).setVisibility(View.VISIBLE);
+                returnView.findViewById(R.id.createdView).setVisibility(View.GONE);
+                returnView.findViewById(R.id.pastView).setVisibility(View.GONE);
             }
         });
 
@@ -102,9 +103,9 @@ public class HistoryFragment extends Fragment {
                 created.setSelected(true);
                 current.setSelected(false);
                 past.setSelected(false);
-                returnView.findViewById(R.id.createdRecycler).setVisibility(View.VISIBLE);
-                returnView.findViewById(R.id.currentRecycler).setVisibility(View.GONE);
-                returnView.findViewById(R.id.pastRecycler).setVisibility(View.GONE);
+                returnView.findViewById(R.id.createdView).setVisibility(View.VISIBLE);
+                returnView.findViewById(R.id.currentView).setVisibility(View.GONE);
+                returnView.findViewById(R.id.pastView).setVisibility(View.GONE);
             }
         });
 
@@ -114,9 +115,9 @@ public class HistoryFragment extends Fragment {
                 past.setSelected(true);
                 current.setSelected(false);
                 created.setSelected(false);
-                returnView.findViewById(R.id.pastRecycler).setVisibility(View.VISIBLE);
-                returnView.findViewById(R.id.currentRecycler).setVisibility(View.GONE);
-                returnView.findViewById(R.id.createdRecycler).setVisibility(View.GONE);
+                returnView.findViewById(R.id.pastView).setVisibility(View.VISIBLE);
+                returnView.findViewById(R.id.currentView).setVisibility(View.GONE);
+                returnView.findViewById(R.id.createdView).setVisibility(View.GONE);
             }
         });
 
@@ -166,31 +167,80 @@ public class HistoryFragment extends Fragment {
         pastJobs = new ArrayList<>();
         createdJobs = new ArrayList<>();
         currentJobs = new ArrayList<>();
-
-        fetch_old_jobs();
+        fetch_current_jobs();
+        fetch_created_jobs();
+        fetch_past_jobs();
         // todo: fetch past and created jobs
     }
 
-    private void initializePastAdapter(){
-        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(pastJobs);
+    private void initializeCurrentAdapter(){
+        GeneralJobCardAdapter adapter =new GeneralJobCardAdapter(createdJobs); // new GeneralJobCardAdapter(currentJobs);
         currentView.setAdapter(adapter);
     }
 
-    //gets user location then fetch jobs
-    @SuppressLint("MissingPermission")
-    public void fetch_old_jobs(){
-        fetch();
+    private void initializePastAdapter(){
+        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(createdJobs); // new GeneralJobCardAdapter(pastJobs);
+        pastView.setAdapter(adapter);
     }
 
-    //fetch offers around default radius of user from firebase
-    public void fetch(){
+    private void initializeCreatedAdapter(){
+        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(createdJobs);
+        createdView.setAdapter(adapter);
+    }
+
+
+    //fetch offers than has been accepted by user and are done
+    @SuppressLint("MissingPermission")
+    public void fetch_past_jobs(){
+
+        Log.d(TAG, "fetch_past_jobs: ");
 
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
-        Query offersQuery = offers_ref.child(userId).child("offers_created");
+        Query offersQuery = offers_ref.child(userId).child("offers_accepted").orderByChild("isDone_worker").equalTo(true);
         offersQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                Log.d(TAG, "onChildAdded: ");
                 items_retrieved++;
+                Job job = dataSnapshot.getValue(Job.class);
+                if(job != null){
+                    pastJobs.add(job);
+                    initializePastAdapter();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
+    }
+
+    //fetch offers than has been accepted by user but still incomplete
+    @SuppressLint("MissingPermission")
+    public void fetch_current_jobs(){
+        DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
+        Query offersQuery = offers_ref.child(userId).child("offers_accepted").orderByChild("isDone_worker").equalTo(false);
+        offersQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Job job = dataSnapshot.getValue(Job.class);
                 if(job != null){
                     // todo: like past jobs are fetched here,
@@ -198,8 +248,49 @@ public class HistoryFragment extends Fragment {
                     // todo: note that created jobs uses the normal adapter, i.e. GeneralJobCardAdapter
                     // todo: same as past, just include feedback
 
-                    pastJobs.add(job);
-                    initializePastAdapter();
+                    currentJobs.add(job);
+                    initializeCurrentAdapter();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
+    }
+
+    //fetch offers that has been created by user
+    @SuppressLint("MissingPermission")
+    public void fetch_created_jobs(){
+        DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
+        Query offersQuery = offers_ref.child(userId).child("offers_created");
+        offersQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                Log.d(TAG, "onChildAdded: ");
+                items_retrieved++;
+                Job job = dataSnapshot.getValue(Job.class);
+                if(job != null){
+                    createdJobs.add(job);
+                    initializeCreatedAdapter();
                 }
             }
 
