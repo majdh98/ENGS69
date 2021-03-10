@@ -40,7 +40,6 @@ public class ContentActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
         // hide the action bar at the top
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#002171")));
         getSupportActionBar().hide();
 
 

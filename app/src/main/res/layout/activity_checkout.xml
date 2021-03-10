@@ -40,7 +40,6 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-
         <include
             android:id="@+id/googlePayButton"
             layout="@layout/buy_with_googlepay_button"
