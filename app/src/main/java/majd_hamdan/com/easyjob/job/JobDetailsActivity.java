@@ -210,14 +210,7 @@ public class JobDetailsActivity extends AppCompatActivity {
                 fetch_user_info(worker, job.worker_id);
             }
         }
-
-
-
-
-
-
-
-    }
+            }
 
     public void initiate_avaliable_job_ui(){
 

@@ -347,6 +347,8 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onGeoQueryReady() {
 
+                Log.d(TAG, "onGeoQueryReady: ssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+
                 //once the data has been queried, check if the loaded data count equals the
                 //queried data. If not, wait until all data is loaded then initializeAdapter
 
