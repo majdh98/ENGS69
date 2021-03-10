@@ -1,5 +1,7 @@
 package majd_hamdan.com.easyjob.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +18,24 @@ import java.util.List;
 
 import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.job.Job;
+import majd_hamdan.com.easyjob.job.JobDetailsActivity;
 
 public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAdapter.JobViewHolder> {
 
+
+    private Context context;
     // setup to handle the button press
     private OnItemClickListener mListener;
+
 
     public interface OnItemClickListener{
         void onMoreDetailsClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
+
         mListener = listener;
+
     }
 
     public static class JobViewHolder extends RecyclerView.ViewHolder{
@@ -53,6 +61,12 @@ public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAd
                 @Override
                 public void onClick(View v) {
                     // todo: implement function to handle the press
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            listener.onMoreDetailsClick(position);
+                        }
+                    }
                 }
             });
         }

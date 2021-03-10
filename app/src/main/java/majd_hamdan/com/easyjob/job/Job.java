@@ -2,9 +2,10 @@ package majd_hamdan.com.easyjob.job;
 
 import android.location.Location;
 
+import java.io.Serializable;
 
 
-public class Job {
+public class Job implements Serializable {
 
     //must be decalred public for firebase
     public String location_key;

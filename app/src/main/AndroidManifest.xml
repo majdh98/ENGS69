@@ -61,7 +61,7 @@
             </intent-filter>
         </activity>
 
-
+        <activity android:name=".job.JobDetailsActivity"></activity>
     </application>
 
 </manifest>

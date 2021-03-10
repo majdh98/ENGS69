@@ -57,13 +57,24 @@ public class CreatedJobCardAdapter extends RecyclerView.Adapter<CreatedJobCardAd
                 @Override
                 public void onClick(View v) {
                     // todo: implement function to handle the press
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            listener.onDeleteClick(position);
+                        }
+                    }
                 }
             });
 
             detailsBtn.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    // todo: implement function to handle the press
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if(position != RecyclerView.NO_POSITION){
+                            listener.onDetailsClick(position);
+                        }
+                    }
                 }
             });
         }

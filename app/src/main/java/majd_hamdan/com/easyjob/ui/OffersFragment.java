@@ -66,6 +66,10 @@ import majd_hamdan.com.easyjob.authentication.User;
 import majd_hamdan.com.easyjob.helper.PermissionUtils;
 import majd_hamdan.com.easyjob.job.AddJobActivity;
 import majd_hamdan.com.easyjob.job.Job;
+import majd_hamdan.com.easyjob.job.JobDetailsActivity;
+
+import static majd_hamdan.com.easyjob.ui.HistoryFragment.AVALIABLE_JOB_KEY;
+import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_TAG;
 
 public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
@@ -238,6 +242,15 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     private void initializeAdapter(){
         GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(jobs);
         view.setAdapter(adapter);
+        adapter.setOnItemClickListener(new GeneralJobCardAdapter.OnItemClickListener()
+        {
+            @Override
+            public void onMoreDetailsClick(int position) {
+                Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
+                intent.putExtra(JOB_TAG, AVALIABLE_JOB_KEY);
+                startActivity(intent);
+            }
+        });
     }
 
 
