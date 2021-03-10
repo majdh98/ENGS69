@@ -1,15 +1,14 @@
 package majd_hamdan.com.easyjob.job;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,12 +48,18 @@ public class JobDetailsActivity extends AppCompatActivity {
 
         if(job_code == HistoryFragment.CURRENT_JOB_KEY){
             findViewById(R.id.current_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.past_view).setVisibility(View.GONE);
+            findViewById(R.id.created_view).setVisibility(View.GONE);
             initiate_current_ui();
         }else if(job_code == HistoryFragment.PAST_JOB_KEY){
             findViewById(R.id.past_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.currentView).setVisibility(View.GONE);
+            findViewById(R.id.created_view).setVisibility(View.GONE);
             initiate_past_ui();
         }else if(job_code == HistoryFragment.CREATED_JOB_KEY){
             findViewById(R.id.created_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.past_view).setVisibility(View.GONE);
+            findViewById(R.id.current_view).setVisibility(View.GONE);
             initiate_created_ui();
         }else{
             findViewById(R.id.avaliable_job_view).setVisibility(View.VISIBLE);
@@ -73,7 +78,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         type.setText("Job Type: " + job.type);
         description.setText("Job Desctribtion: " + job.description);
         job_pay.setText("$" + job.hourlyPay);
-        fetch_creator_info(name, job.creator_id);
+        fetch_user_info(name, job.creator_id);
         location.setText(job.address);
 
     }
@@ -83,6 +88,57 @@ public class JobDetailsActivity extends AppCompatActivity {
     }
 
     public void initiate_created_ui(){
+
+        EditText job_type;
+        EditText job_pay;
+        EditText job_description;
+        EditText address_field;
+        EditText city_field;
+        EditText zipcode_field;
+        EditText state_field;
+        EditText country_field;
+        EditText worker;
+        job_type = (EditText) findViewById(R.id.jobtypeField);
+        job_pay = (EditText) findViewById(R.id.payField);
+        job_description = (EditText) findViewById(R.id.descriptionField);
+        address_field = (EditText) findViewById(R.id.addressField);
+        city_field = (EditText) findViewById(R.id.cityField);
+        zipcode_field = (EditText) findViewById(R.id.zipcodeField);
+        country_field = (EditText) findViewById(R.id.countryField);
+        state_field = (EditText) findViewById(R.id.stateField);
+        worker = (EditText) findViewById(R.id.worker);
+
+        job_type.setText(job.type);
+        job_description.setText(job.description);
+        job_pay.setText(job.hourlyPay);
+
+        String[] add = job.address.split(",");
+        String[] state_zip = add[2].split(" ");
+        address_field.setText(add[0]);
+        city_field.setText(add[1]);
+        state_field.setText(state_zip[1]);
+        country_field.setText(add[3]);
+        zipcode_field.setText(state_zip[2]);
+
+
+
+        if(job.isAvaliable){
+            job_description.setEnabled(false);
+            job_pay.setEnabled(false);
+            job_type.setEnabled(false);
+            state_field.setEnabled(false);
+            address_field.setEnabled(false);
+            city_field.setEnabled(false);
+            zipcode_field.setEnabled(false);
+            country_field.setEnabled(false);
+            worker.setVisibility(View.VISIBLE);
+            findViewById(R.id.drop_worker).setVisibility(View.VISIBLE);
+            fetch_user_info(worker, job.worker_id);
+
+        }
+
+
+
 
     }
 
@@ -98,7 +154,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         outState.putSerializable(HistoryFragment.JOB_KEY, job);
     }
 
-    public void fetch_creator_info(TextView view, String creator_id ){
+    public void fetch_user_info(TextView view, String creator_id ){
 
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(creator_id);

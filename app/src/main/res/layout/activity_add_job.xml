@@ -127,6 +127,7 @@
         </EditText>
 
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -141,6 +142,24 @@
             android:layout_height="wrap_content"
             android:inputType="text">
         </EditText>
+
+        <EditText
+            android:id="@+id/worker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:inputType="text">
+        </EditText>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/drop_worker"
+            android:text="Drop Worker"
+            android:onClick="onDropWorkerClicked"
+            android:visibility="gone">
+
+        </Button>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -179,6 +198,194 @@
 
 
 </ScrollView>
+
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<ScrollView-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:orientation="vertical">-->
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/job_type"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textColor="@color/black">-->
+<!--        </TextView>-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/jobtypeField"-->
+<!--            android:hint="@string/job_type_hint"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="text">-->
+<!--            <requestFocus></requestFocus>-->
+<!--        </EditText>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/pay"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textColor="@color/black">-->
+<!--        </TextView>-->
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/payField"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="numberDecimal"-->
+<!--            android:hint="@string/pay_hint">-->
+<!--        </EditText>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/description"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textColor="@color/black">-->
+<!--        </TextView>-->
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/descriptionField"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="What the job is about..."-->
+<!--            android:inputType="text">-->
+<!--        </EditText>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/address"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textColor="@color/black">-->
+<!--        </TextView>-->
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/addressField"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="text">-->
+<!--        </EditText>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/city"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textColor="@color/black">-->
+<!--        </TextView>-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/cityField"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="text">-->
+<!--        </EditText>-->
+
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/state"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textColor="@color/black">-->
+<!--        </TextView>-->
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/stateField"-->
+<!--            android:hint="@string/state_hint"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="text">-->
+<!--        </EditText>-->
+
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/zipcode"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textColor="@color/black">-->
+<!--        </TextView>-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/zipcodeField"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="number">-->
+<!--        </EditText>-->
+
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/country"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textColor="@color/black">-->
+<!--        </TextView>-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/countryField"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:inputType="text">-->
+<!--        </EditText>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:orientation="horizontal"-->
+<!--            >-->
+
+<!--            <Button-->
+<!--                android:id="@+id/addJobButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:onClick="onAddJobClicked"-->
+<!--                android:text="@string/create_offer_button_label">-->
+<!--            </Button>-->
+
+<!--            <Button-->
+<!--                android:id="@+id/createJobCancel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:onClick="onCancelClicked"-->
+<!--                android:text="Cancel">-->
+<!--            </Button>-->
+
+
+
+<!--        </LinearLayout>-->
+
+<!--    </LinearLayout>-->
+
+
+
+
+<!--</ScrollView>-->
+
+
+
+
+
 
 
 
