@@ -3,9 +3,11 @@ package majd_hamdan.com.easyjob.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -42,6 +44,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -53,8 +56,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +76,10 @@ import majd_hamdan.com.easyjob.job.JobDetailsActivity;
 import static majd_hamdan.com.easyjob.ui.HistoryFragment.AVALIABLE_JOB_KEY;
 import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_TAG;
 
-public class OffersFragment extends Fragment implements OnMapReadyCallback {
+public class OffersFragment extends Fragment implements OnMapReadyCallback,
+        ClusterManager.OnClusterClickListener<OffersFragment.MapItem>,
+        ClusterManager.OnClusterItemClickListener<OffersFragment.MapItem>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<OffersFragment.MapItem> {
 
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     //Map and location variables
@@ -220,6 +228,19 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         //check for permission and enable location layer.
         enableMyLocation();
 
+        clusterManager = new ClusterManager<MapItem>(getContext(), map);
+
+        // setup on click listeners
+        clusterManager.setOnClusterClickListener(this);
+        clusterManager.setOnClusterItemClickListener(this);
+        clusterManager.setOnClusterItemInfoWindowClickListener(this);
+
+        MapItemMarkerRender renderer = new MapItemMarkerRender(getContext(), map, clusterManager);
+
+        map.setOnCameraIdleListener(clusterManager);
+        map.setOnMarkerClickListener(clusterManager);
+        clusterManager.setRenderer(renderer);
+
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
@@ -231,10 +252,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                                     location.getLongitude());
                             // Logic to handle location object
                             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
-                            clusterManager = new ClusterManager<MapItem>(getContext(), map);
-                            map.setOnCameraIdleListener(clusterManager);
-                            map.setOnMarkerClickListener(clusterManager);
 
                             fetch_offers();
                         }
@@ -355,6 +372,49 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    // cluster methods 
+    @Override
+    public boolean onClusterClick(Cluster<MapItem> cluster) {
+        return false;
+    }
+
+    @Override
+    public boolean onClusterItemClick(MapItem item) {
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(MapItem item) {
+
+    }
+
+    // customize clusterer
+    public class MapItemMarkerRender extends DefaultClusterRenderer<MapItem> {
+
+        private final Context mContext;
+
+        public MapItemMarkerRender(Context context, GoogleMap map, ClusterManager<MapItem> clusterManager) {
+            super(context, map, clusterManager);
+            mContext = context;
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(MapItem item, MarkerOptions markerOptions) {
+
+        }
+        @Override
+        protected void onBeforeClusterRendered(Cluster<MapItem> cluster, MarkerOptions markerOptions) {
+
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster<MapItem> cluster){
+            // cluster if there is more than one marker at one postion
+            return cluster.getSize() > 1;
+        }
+
+    }
+
     
     
     public void populate_map(){
@@ -382,7 +442,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     }
 
     // to help with map clustering for markers
-    private class MapItem implements ClusterItem {
+    public class MapItem implements ClusterItem {
         private double latitude;
         private double longitude;
 
