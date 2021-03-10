@@ -14,18 +14,10 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import majd_hamdan.com.easyjob.ui.HistoryFragment;
 import majd_hamdan.com.easyjob.ui.OffersFragment;
 import majd_hamdan.com.easyjob.ui.ProfileFragment;
-import majd_hamdan.com.easyjob.ui.StickyFragmentNavigator;
 
 public class ContentActivity extends AppCompatActivity {
 
