@@ -207,6 +207,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
     }
 
+
     public void loadLogIn(){
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

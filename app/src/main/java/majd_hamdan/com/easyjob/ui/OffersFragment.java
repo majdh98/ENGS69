@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,19 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import androidx.appcompat.widget.SwitchCompat;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,14 +57,17 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import majd_hamdan.com.easyjob.ContentActivity;
 import majd_hamdan.com.easyjob.R;
 
-import majd_hamdan.com.easyjob.ViewJobsActivity;
-import majd_hamdan.com.easyjob.adapters.RVAdapter;
+import majd_hamdan.com.easyjob.adapters.GeneralJobCardAdapter;
+import majd_hamdan.com.easyjob.authentication.User;
 import majd_hamdan.com.easyjob.helper.PermissionUtils;
 import majd_hamdan.com.easyjob.job.AddJobActivity;
 import majd_hamdan.com.easyjob.job.Job;
+import majd_hamdan.com.easyjob.job.JobDetailsActivity;
+
+import static majd_hamdan.com.easyjob.ui.HistoryFragment.AVALIABLE_JOB_KEY;
+import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_TAG;
 
 public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
@@ -97,20 +94,36 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     private int items_queried;
     private int items_retrieved;
 
+    private String userFirstName;
+
 
     String TAG = "mh";
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_offers, container, false);
 
-        // get ui elements
+
+        // GET UI ELEMENTS
+
+        // welcome message
+        welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
+
+        // fetch user information to update welcome message
+        fetch_user_info_for_welcome(welcomeMessage, null);
+
 
         // toggle switch
         mapToggle = (RadioButton)returnView.findViewById(R.id.Maps);
         listToggle = (RadioButton)returnView.findViewById(R.id.offer);
+
 
         mapToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,13 +146,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         });
 
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
-        viewJobButtons = (Button)returnView.findViewById(R.id.viewJobs);
-        viewJobButtons.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ViewJobsActivity.class));
-            }
-        });
         addJob = (Button) returnView.findViewById(R.id.createJob);
         addJob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,10 +163,9 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         items_retrieved = 0;
         initJobs();
 
-
-
         return returnView;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -190,7 +195,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         };
-
     }
 
     @Override
@@ -236,12 +240,46 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initializeAdapter(){
-        RVAdapter adapter = new RVAdapter(jobs);
+        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(jobs);
         view.setAdapter(adapter);
+        adapter.setOnItemClickListener(new GeneralJobCardAdapter.OnItemClickListener()
+        {
+            @Override
+            public void onMoreDetailsClick(int position) {
+                Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
+                intent.putExtra(JOB_TAG, AVALIABLE_JOB_KEY);
+                startActivity(intent);
+            }
+        });
     }
 
 
     //Database--------------------------------------------------------------------------------------
+    public static void fetch_user_info_for_welcome(TextView toSetWelcome, TextView fullName){
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        Query userQuery = users_ref.child(userId);
+        userQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    // get ui element for welcome message and populate with user info
+                    toSetWelcome.setText("Hello, " + user.firstName);
+
+                    // can set the user name if that is necessary
+                    if (fullName != null){
+                        fullName.setText(user.firstName + " " + user.lastName);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     //fetch offers around default radius of user from firebase
     public void fetch_offers(){
@@ -249,35 +287,28 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                items_queried++;
-                Log.d(TAG, "onKeyEntered: " + String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
+                if(getContext() != null){
+                    items_queried++;
 
-                DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
-                Query offersQuery = offers_ref.child(key);
-                offersQuery.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        items_retrieved++;
-                        Log.d(TAG, "onDataChange: ");
-                        Job job = dataSnapshot.getValue(Job.class);
-                        if(job != null){
-                            LatLng job_location = getLocationFromAddress(job.address);
-                            Marker marker = map.addMarker(
-                                    new MarkerOptions()
-                                            .position(job_location)
-                                            .title(job.type)
-                                            .snippet("$"+job.hourlyPay));
-                            marker.showInfoWindow();
-
-                            jobs.add(job);
+                    DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+                    Query offersQuery = offers_ref.child(key);
+                    offersQuery.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            items_retrieved++;
+                            Job job = dataSnapshot.getValue(Job.class);
+                            if(job != null){
+                                jobs.add(job);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                        }
+                    });
+                }
+
             }
 
 
@@ -298,7 +329,11 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 //queried data. If not, wait until all data is loaded then initializeAdapter
 
                 if(items_queried == items_retrieved){
+                    //populate list
                     initializeAdapter();
+                    
+                    //populate map
+                    populate_map();
                 }else{
                     new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                         @Override
@@ -316,10 +351,24 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         });
 
     }
+    
+    public void populate_map(){
+        Log.d(TAG, "populate_map: ");
+        for(int i = 0; i<jobs.size(); i++){
+            LatLng job_location = getLocationFromAddress(jobs.get(i).address);
+            Marker marker = map.addMarker(
+                    new MarkerOptions()
+                            .position(job_location)
+                            .title(jobs.get(i).type)
+                            .snippet("$"+jobs.get(i).hourlyPay));
+            marker.showInfoWindow();
+        }
+        
+    }
 
     public LatLng getLocationFromAddress(String address){
         try {
-            Geocoder selected_place_geocoder = new Geocoder(getContext());
+            Geocoder selected_place_geocoder = new Geocoder(getActivity());
             List<Address> addresses;
 
             addresses = selected_place_geocoder.getFromLocationName(address, 1);

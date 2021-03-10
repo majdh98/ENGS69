@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/current_view">
+
+        <TextView
+            android:id="@+id/job_type"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="218dp"
+
+            android:ems="10"
+            android:text="Job Type:"></TextView>
+
+        <TextView
+            android:id="@+id/job_pay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/job_type"
+            android:layout_alignLeft="@+id/job_type"
+            android:ems="10"
+            android:text="Job Pay "></TextView>
+
+        <TextView
+            android:id="@+id/creator_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/job_pay"
+            android:layout_alignLeft="@+id/job_pay"
+            android:ems="10"
+            android:text="Job Creator "></TextView>
+
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/creator_name"
+            android:layout_alignLeft="@+id/creator_name"
+            android:ems="10"
+            android:text="Job Location "></TextView>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location"
+            android:layout_alignLeft="@+id/location"
+            android:ems="10"
+            android:text="Job Description"></TextView>
+
+        <Button
+            android:id="@+id/chat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/description"
+            android:layout_alignLeft="@+id/description"
+            android:layout_marginLeft="-4dp"
+            android:layout_marginTop="160dp"
+            android:onClick="onContactCreatorClicked"
+            android:text="Contact the Creator"></Button>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/chat"
+            android:layout_below="@+id/chat"
+            android:onClick="onDropClicked"
+            android:backgroundTint="#ffff0000"
+            android:text="Drop"></Button>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_above="@+id/job_type"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="130dp"
+            android:layout_marginEnd="130dp"
+            android:layout_marginBottom="-160dp"
+            app:srcCompat="@drawable/baseline_work_black_24dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/past_view">
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:id="@+id/created_view">
+
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/job_type"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+                <EditText
+                    android:id="@+id/jobtypeField"
+                    android:hint="@string/job_type_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                    <requestFocus></requestFocus>
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pay"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/payField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:hint="@string/pay_hint">
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/descriptionField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="What the job is about..."
+                    android:inputType="text">
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/addressField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/city"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+                <EditText
+                    android:id="@+id/cityField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                </EditText>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/state"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/stateField"
+                    android:hint="@string/state_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                </EditText>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zipcode"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+                <EditText
+                    android:id="@+id/zipcodeField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number">
+                </EditText>
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/country"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+                <EditText
+                    android:id="@+id/countryField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                </EditText>
+
+                <EditText
+                    android:id="@+id/worker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:visibility="gone"
+                    android:inputType="text">
+                </EditText>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/drop_worker"
+                    android:text="Drop Worker"
+                    android:onClick="onDropWorkerClicked"
+                    android:visibility="gone">
+
+                </Button>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    >
+
+                    <Button
+                        android:id="@+id/save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:onClick="onAddJobClicked"
+                        android:text="Save">
+                    </Button>
+
+                    <Button
+                        android:id="@+id/createJobCancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:onClick="onCancelClicked"
+                        android:text="Cancel">
+                    </Button>
+
+                    <Button
+                        android:id="@+id/createJobDelete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#ffff0000"
+                        android:onClick="onDeleteButtonClicked"
+                        android:text="Delete"/>
+
+
+                </LinearLayout>
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="48sp"
+                    android:background="@color/black"
+                    android:padding="2sp"
+                    android:contentDescription="@string/buy_with_googlepay_button_content_description">
+                    <LinearLayout
+                        android:duplicateParentState="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:weightSum="2"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:scaleType="fitCenter"
+                            android:duplicateParentState="true"
+                            android:src="@drawable/googlepay_button_content"/>
+                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/payButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:onClick="onPayButtonClick"
+                        android:duplicateParentState="true"
+                        android:src="@drawable/googlepay_button_overlay"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/avaliable_job_view">
+
+
+
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

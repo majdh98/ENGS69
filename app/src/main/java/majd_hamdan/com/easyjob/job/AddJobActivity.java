@@ -2,6 +2,8 @@ package majd_hamdan.com.easyjob.job;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -9,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -70,6 +73,13 @@ public class AddJobActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_job);
 
+        // setup app bar
+        setTitle("Create a Job");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#002171")));
+
+        // used to suppress the keyboard from popping up when code runs
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         //initialize firebase db and user id
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -101,6 +111,9 @@ public class AddJobActivity extends AppCompatActivity  {
 
     }
 
+    public void onCancelClicked(View view){
+        finish();
+    }
 
 
     public void onAddJobClicked(View view){
@@ -166,7 +179,7 @@ public class AddJobActivity extends AppCompatActivity  {
             }
         }
 
-        return "fill in " + toast.toString() + " information";
+        return "Fill in " + toast.toString() + " information.";
     }
 
     @SuppressLint("MissingPermission")
