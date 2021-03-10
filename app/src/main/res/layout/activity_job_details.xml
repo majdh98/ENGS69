@@ -647,8 +647,8 @@
             android:layout_alignLeft="@+id/description_a"
             android:layout_marginLeft="-4dp"
             android:layout_marginTop="160dp"
-            android:onClick="onChatClicked"
-            android:text="Chat with the creator"></Button>
+            android:onClick="onChatClickedDetails"
+            android:text="Contact Creator"></Button>
 
         <Button
             android:layout_width="match_parent"

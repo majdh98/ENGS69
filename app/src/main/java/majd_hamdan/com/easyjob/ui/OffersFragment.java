@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -46,6 +47,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,6 +64,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import majd_hamdan.com.easyjob.R;
@@ -92,6 +95,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     private GeoFire geoFire;
     private Location initial_location;
     private ClusterManager<MapItem> clusterManager;
+    private MapItem clickMapItemMarker;
 
 
     private RecyclerView view;
@@ -235,6 +239,32 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
         clusterManager.setOnClusterClickListener(this);
         clusterManager.setOnClusterItemClickListener(this);
         clusterManager.setOnClusterItemInfoWindowClickListener(this);
+
+        clusterManager.getMarkerCollection().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                // todo: implement
+                LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(getContext().LAYOUT_INFLATER_SERVICE);
+
+                final View view = inflater.inflate(R.layout.custom_marker, null);
+
+                TextView title = (TextView)view.findViewById(R.id.popUpTitle);
+                TextView pay = (TextView)view.findViewById(R.id.popUpPay);
+                title.setText(clickMapItemMarker.title);
+                title.setBackgroundColor(Color.RED);
+                title.setTextColor(Color.WHITE);
+                pay.setBackgroundColor(Color.RED);
+                pay.setTextColor(Color.WHITE);
+                pay.setText(clickMapItemMarker.snippet);
+
+                return view;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
 
         MapItemMarkerRender renderer = new MapItemMarkerRender(getContext(), map, clusterManager);
 
@@ -385,17 +415,39 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     // cluster methods 
     @Override
     public boolean onClusterClick(Cluster<MapItem> cluster) {
-        return false;
+        // build the lat and lng point in the cluster
+
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        Collection<MapItem> venueMarkers = cluster.getItems();
+
+        for (ClusterItem item : venueMarkers) {
+            LatLng venuePosition = item.getPosition();
+            builder.include(venuePosition);
+        }
+
+        final LatLngBounds bounds = builder.build();
+
+        try { map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+        } catch (Exception error) {
+
+        }
+
+        return true;
     }
 
     @Override
     public boolean onClusterItemClick(MapItem item) {
+        clickMapItemMarker = item;
         return false;
     }
 
     @Override
     public void onClusterItemInfoWindowClick(MapItem item) {
-
+        // start intent with the attached job
+        Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
+        intent.putExtra(JOB_TAG, AVALIABLE_JOB_KEY);
+        intent.putExtra(JOB_KEY, item.attached);
+        startActivity(intent);
     }
 
     // customize clusterer
@@ -441,7 +493,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
             LatLng job_location = getLocationFromAddress(jobs.get(i).address);
             double lat = job_location.latitude;
             double lng = job_location.longitude;
-            MapItem newItem = new MapItem(lat, lng, jobs.get(i).type, "$"+jobs.get(i).hourlyPay);
+            MapItem newItem = new MapItem(jobs.get(i), lat, lng, jobs.get(i).type, "$"+jobs.get(i).hourlyPay);
             clusterManager.addItem(newItem);
 
 
@@ -459,13 +511,15 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
         private final LatLng position;
         private final String title;
         private final String snippet;
+        public Job attached;
 
-        public MapItem(double lat, double lng, String title, String snippet) {
+        public MapItem(Job thisJob, double lat, double lng, String title, String snippet) {
             latitude = lat;
             longitude = lng;
             position = new LatLng(lat, lng);
             this.title = title;
             this.snippet = snippet;
+            attached = thisJob;
         }
 
         @Override
