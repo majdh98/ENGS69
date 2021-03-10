@@ -1,71 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/current_view">
 
         <TextView
             android:id="@+id/job_type"
+            android:textAllCaps="true"
+            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="50dp"
-            android:text="akjdaskdkasd"
-            android:ems="10">
-        </TextView>
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="218dp"
+
+            android:ems="10"
+            android:text="Job Type:"></TextView>
 
         <TextView
             android:id="@+id/job_pay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/job_type"
             android:layout_below="@+id/job_type"
-            android:ems="10">
-        </TextView>
+            android:layout_alignLeft="@+id/job_type"
+            android:ems="10"
+            android:text="Job Pay "></TextView>
 
         <TextView
             android:id="@+id/creator_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/job_pay"
             android:layout_below="@+id/job_pay"
-            android:ems="10">
-        </TextView>
+            android:layout_alignLeft="@+id/job_pay"
+            android:ems="10"
+            android:text="Job Creator "></TextView>
 
         <TextView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/creator_name"
             android:layout_below="@+id/creator_name"
-            android:ems="10">
-        </TextView>
+            android:layout_alignLeft="@+id/creator_name"
+            android:ems="10"
+            android:text="Job Location "></TextView>
 
         <TextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/location"
             android:layout_below="@+id/location"
-            android:ems="10">
-        </TextView>
+            android:layout_alignLeft="@+id/location"
+            android:ems="10"
+            android:text="Job Description"></TextView>
 
         <Button
             android:id="@+id/chat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/description"
             android:layout_below="@+id/description"
+            android:layout_alignLeft="@+id/description"
+            android:layout_marginLeft="-4dp"
+            android:layout_marginTop="160dp"
             android:onClick="onChatClicked"
-            android:text="Chat with the creator">
-        </Button>
+            android:text="Chat with the creator"></Button>
 
         <Button
             android:layout_width="match_parent"
@@ -73,7 +79,20 @@
             android:layout_alignLeft="@+id/chat"
             android:layout_below="@+id/chat"
             android:onClick="onDropClicked"
+            android:backgroundTint="#ffff0000"
             android:text="Drop"></Button>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_above="@+id/job_type"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="130dp"
+            android:layout_marginEnd="130dp"
+            android:layout_marginBottom="-160dp"
+            app:srcCompat="@drawable/baseline_work_black_24dp" />
 
     </RelativeLayout>
 
