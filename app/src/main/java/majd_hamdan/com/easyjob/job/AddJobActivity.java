@@ -171,7 +171,7 @@ public class AddJobActivity extends AppCompatActivity  {
             }
         }
 
-        return "fill in " + toast.toString() + " information";
+        return "Fill in " + toast.toString() + " information.";
     }
 
     @SuppressLint("MissingPermission")

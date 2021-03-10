@@ -57,8 +57,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import majd_hamdan.com.easyjob.ContentActivity;
-import majd_hamdan.com.easyjob.MainActivity;
 import majd_hamdan.com.easyjob.R;
 
 import majd_hamdan.com.easyjob.adapters.GeneralJobCardAdapter;
@@ -112,10 +110,15 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_offers, container, false);
 
-        // fetch user information
-        fetch_user_info(returnView);
 
         // GET UI ELEMENTS
+
+        // welcome message
+        welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
+
+        // fetch user information to update welcome message
+        fetch_user_info_for_welcome(welcomeMessage);
+
 
         // toggle switch
         mapToggle = (RadioButton)returnView.findViewById(R.id.Maps);
@@ -160,8 +163,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         items_retrieved = 0;
         initJobs();
 
-
-
         return returnView;
     }
 
@@ -194,7 +195,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         };
-
     }
 
     @Override
@@ -255,8 +255,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
 
     //Database--------------------------------------------------------------------------------------
-    public void fetch_user_info(View view){
-
+    public static void fetch_user_info_for_welcome(TextView toSetWelcome){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(userId);
@@ -265,11 +264,8 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null) {
-                    userFirstName = user.firstName;
-
                     // get ui element for welcome message and populate with user info
-                    welcomeMessage = (TextView)view.findViewById(R.id.welcome);
-                    welcomeMessage.setText("Hello, " + userFirstName);
+                    toSetWelcome.setText("Hello, " + user.firstName);
                 }
             }
 

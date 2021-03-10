@@ -25,6 +25,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.004" />
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"/>
+
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
@@ -40,6 +44,10 @@
             app:layout_constraintTop_toBottomOf="@+id/welcome"
             app:layout_constraintVertical_bias="0.013" />
 
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"/>
+
         <RadioGroup
             android:id="@+id/jobsToggle"
             android:layout_width="wrap_content"
@@ -47,7 +55,9 @@
             android:background="@drawable/selector_line"
             android:checkedButton="@+id/current"
             android:orientation="horizontal"
+            android:gravity="center"
             android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
             android:layout_marginBottom="20dp"
             >
 
