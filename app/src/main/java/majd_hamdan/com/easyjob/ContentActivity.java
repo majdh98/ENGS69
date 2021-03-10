@@ -41,6 +41,7 @@ public class ContentActivity extends AppCompatActivity {
 
         // hide the action bar at the top
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#002171")));
+        getSupportActionBar().hide();
 
 
         if(savedInstanceState != null){
