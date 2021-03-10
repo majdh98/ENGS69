@@ -3,11 +3,22 @@ package majd_hamdan.com.easyjob.job;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import majd_hamdan.com.easyjob.R;
+import majd_hamdan.com.easyjob.authentication.User;
 import majd_hamdan.com.easyjob.ui.HistoryFragment;
 
 
@@ -36,7 +47,6 @@ public class JobDetailsActivity extends AppCompatActivity {
             job = (Job) getIntent().getSerializableExtra(HistoryFragment.JOB_KEY);
         }
 
-
         if(job_code == HistoryFragment.CURRENT_JOB_KEY){
             findViewById(R.id.current_view).setVisibility(View.VISIBLE);
             initiate_current_ui();
@@ -54,6 +64,17 @@ public class JobDetailsActivity extends AppCompatActivity {
 
 
     public void initiate_current_ui(){
+
+        TextView type = findViewById(R.id.job_type);
+        TextView description = findViewById(R.id.description);
+        TextView job_pay = findViewById(R.id.job_pay);
+        TextView name = findViewById(R.id.creator_name);
+        TextView location = findViewById(R.id.location);
+        type.setText("Job Type: " + job.type);
+        description.setText("Job Desctribtion: " + job.description);
+        job_pay.setText("$" + job.hourlyPay);
+        fetch_creator_info(name, job.creator_id);
+        location.setText(job.address);
 
     }
 
@@ -75,5 +96,25 @@ public class JobDetailsActivity extends AppCompatActivity {
 
         outState.putInt(HistoryFragment.JOB_TAG, job_code);
         outState.putSerializable(HistoryFragment.JOB_KEY, job);
+    }
+
+    public void fetch_creator_info(TextView view, String creator_id ){
+
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        Query userQuery = users_ref.child(creator_id);
+        userQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    view.setText("Creator Name: " + user.firstName + " " + user.lastName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
