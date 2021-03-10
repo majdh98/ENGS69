@@ -101,13 +101,16 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
     String TAG = "mh";
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_offers, container, false);
-
-        // get ui elements
 
         // toggle switch
         mapToggle = (RadioButton)returnView.findViewById(R.id.Maps);
@@ -162,6 +165,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
         return returnView;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -252,7 +256,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
             public void onKeyEntered(String key, GeoLocation location) {
                 if(getContext() != null){
                     items_queried++;
-                    Log.d(TAG, "onKeyEntered: " + String.format("Key %s entered the search area at [%f,%f]", key, location.latitude, location.longitude));
 
                     DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
                     Query offersQuery = offers_ref.child(key);
@@ -260,19 +263,9 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             items_retrieved++;
-                            Log.d(TAG, "onDataChange: " + items_retrieved);
                             Job job = dataSnapshot.getValue(Job.class);
                             if(job != null){
-//                                LatLng job_location = getLocationFromAddress(job.address);
-//                                Marker marker = map.addMarker(
-//                                        new MarkerOptions()
-//                                                .position(job_location)
-//                                                .title(job.type)
-//                                                .snippet("$"+job.hourlyPay));
-//                                marker.showInfoWindow();
-
                                 jobs.add(job);
-//                                initializeAdapter();
                             }
                         }
 

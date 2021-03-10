@@ -73,7 +73,7 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="59dp">
+        tools:layout_editor_absoluteY="0dp">
 
         <TextView
             android:id="@+id/welcome"
@@ -144,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="230dp"
-            android:paddingBottom="56dp"
+            android:paddingBottom="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
