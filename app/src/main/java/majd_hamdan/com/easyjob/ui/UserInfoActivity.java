@@ -2,11 +2,16 @@ package majd_hamdan.com.easyjob.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,7 +47,7 @@ public class UserInfoActivity extends AppCompatActivity {
     protected EditText firstName;
     protected EditText lastName;
     protected EditText phoneNumber;
-
+    protected ImageView  imageView;
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference database;
@@ -52,7 +57,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
 
 
-    String TAG = "mh";
+    //String TAG = "mh";
 
 
 
@@ -60,6 +65,7 @@ public class UserInfoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_user_info);
 
         //initiate connection to db
@@ -72,6 +78,12 @@ public class UserInfoActivity extends AppCompatActivity {
         // Initialize FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
+
+        imageView = findViewById(R.id.easyjob_imageview);
+
+
+        userInfo = new User();
+
     }
 
     public void onSaveButtonClicked(View view) {
@@ -80,8 +92,8 @@ public class UserInfoActivity extends AppCompatActivity {
             fn = userInfo.firstName;
         }
         String ln = lastName.getText().toString();
-        if(fn.isEmpty()){
-            fn = userInfo.lastName;
+        if(ln.isEmpty()){
+            ln = userInfo.lastName;
         }
         String phone_num = phoneNumber.getText().toString();
         if(phone_num.isEmpty()){

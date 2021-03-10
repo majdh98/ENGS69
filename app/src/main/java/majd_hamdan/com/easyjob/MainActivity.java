@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
            loadContent();
         }
 
-
     }
+
 
     public void loadLogIn(){
         Intent intent = new Intent(this, LoginActivity.class);
