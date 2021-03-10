@@ -3,9 +3,11 @@ package majd_hamdan.com.easyjob.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -42,6 +44,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -53,6 +56,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +77,10 @@ import static majd_hamdan.com.easyjob.ui.HistoryFragment.AVALIABLE_JOB_KEY;
 import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_KEY;
 import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_TAG;
 
-public class OffersFragment extends Fragment implements OnMapReadyCallback {
+public class OffersFragment extends Fragment implements OnMapReadyCallback,
+        ClusterManager.OnClusterClickListener<OffersFragment.MapItem>,
+        ClusterManager.OnClusterItemClickListener<OffersFragment.MapItem>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<OffersFragment.MapItem> {
 
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     //Map and location variables
@@ -81,6 +91,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     private DatabaseReference geofire_db;
     private GeoFire geoFire;
     private Location initial_location;
+    private ClusterManager<MapItem> clusterManager;
 
 
     private RecyclerView view;
@@ -118,7 +129,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
 
         // fetch user information to update welcome message
-        fetch_user_info_for_welcome(welcomeMessage, null);
+        fetch_user_info_for_welcome(welcomeMessage);
 
 
         // toggle switch
@@ -218,6 +229,19 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         //check for permission and enable location layer.
         enableMyLocation();
 
+        clusterManager = new ClusterManager<MapItem>(getContext(), map);
+
+        // setup on click listeners
+        clusterManager.setOnClusterClickListener(this);
+        clusterManager.setOnClusterItemClickListener(this);
+        clusterManager.setOnClusterItemInfoWindowClickListener(this);
+
+        MapItemMarkerRender renderer = new MapItemMarkerRender(getContext(), map, clusterManager);
+
+        map.setOnCameraIdleListener(clusterManager);
+        map.setOnMarkerClickListener(clusterManager);
+        clusterManager.setRenderer(renderer);
+
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
@@ -229,6 +253,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                                     location.getLongitude());
                             // Logic to handle location object
                             map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
                             fetch_offers();
                         }
                     }
@@ -257,7 +282,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
 
     //Database--------------------------------------------------------------------------------------
-    public static void fetch_user_info_for_welcome(TextView toSetWelcome, TextView fullName){
+    public static void fetch_user_info_for_welcome(TextView toSetWelcome){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(userId);
@@ -268,11 +293,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 if (user != null) {
                     // get ui element for welcome message and populate with user info
                     toSetWelcome.setText("Hello, " + user.firstName);
-
-                    // can set the user name if that is necessary
-                    if (fullName != null){
-                        fullName.setText(user.firstName + " " + user.lastName);
-                    }
                 }
             }
 
@@ -353,19 +373,109 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         });
 
     }
+
+    // cluster methods 
+    @Override
+    public boolean onClusterClick(Cluster<MapItem> cluster) {
+        return false;
+    }
+
+    @Override
+    public boolean onClusterItemClick(MapItem item) {
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(MapItem item) {
+
+    }
+
+    // customize clusterer
+    public class MapItemMarkerRender extends DefaultClusterRenderer<MapItem> {
+
+        private final Context mContext;
+
+        public MapItemMarkerRender(Context context, GoogleMap map, ClusterManager<MapItem> clusterManager) {
+            super(context, map, clusterManager);
+            mContext = context;
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(MapItem item, MarkerOptions markerOptions) {
+
+        }
+        @Override
+        protected void onBeforeClusterRendered(Cluster<MapItem> cluster, MarkerOptions markerOptions) {
+
+        }
+
+        @Override
+        protected boolean shouldRenderAsCluster(Cluster<MapItem> cluster){
+            // cluster if there is more than one marker at one postion
+            return cluster.getSize() > 1;
+        }
+
+    }
+
+    
     
     public void populate_map(){
         Log.d(TAG, "populate_map: ");
         for(int i = 0; i<jobs.size(); i++){
+            //            LatLng job_location = getLocationFromAddress(jobs.get(i).address);
+            //            Marker marker = map.addMarker(
+            //                    new MarkerOptions()
+            //                            .position(job_location)
+            //                            .title(jobs.get(i).type)
+            //                            .snippet("$"+jobs.get(i).hourlyPay));
+            //            marker.showInfoWindow();
+
             LatLng job_location = getLocationFromAddress(jobs.get(i).address);
-            Marker marker = map.addMarker(
-                    new MarkerOptions()
-                            .position(job_location)
-                            .title(jobs.get(i).type)
-                            .snippet("$"+jobs.get(i).hourlyPay));
-            marker.showInfoWindow();
+            double lat = job_location.latitude;
+            double lng = job_location.longitude;
+            MapItem newItem = new MapItem(lat, lng, jobs.get(i).type, "$"+jobs.get(i).hourlyPay);
+            clusterManager.addItem(newItem);
+
+
+            // todo: cluster items?
         }
+
         
+    }
+
+    // to help with map clustering for markers
+    public class MapItem implements ClusterItem {
+        private double latitude;
+        private double longitude;
+
+        private final LatLng position;
+        private final String title;
+        private final String snippet;
+
+        public MapItem(double lat, double lng, String title, String snippet) {
+            latitude = lat;
+            longitude = lng;
+            position = new LatLng(lat, lng);
+            this.title = title;
+            this.snippet = snippet;
+        }
+
+        @Override
+        public LatLng getPosition() {
+            return position;
+        }
+
+        @Override
+        public String getTitle() {
+            return title;
+        }
+
+        @Override
+        public String getSnippet() {
+            return snippet;
+        }
+
+
     }
 
     public LatLng getLocationFromAddress(String address){
