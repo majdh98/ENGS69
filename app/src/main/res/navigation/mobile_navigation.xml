@@ -8,7 +8,7 @@
     <sticky_fragment
         android:id="@+id/navigation_offers"
         android:name="majd_hamdan.com.easyjob.ui.OffersFragment"
-        android:label="@string/title_offers"
+        android:label="@string/title_jobs"
         tools:layout="@layout/fragment_offers">
 
         <RadioGroup

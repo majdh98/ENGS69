@@ -16,7 +16,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="269dp"
+        android:layout_height="match_parent"
         android:padding="@dimen/activity_horizontal_margin">
 
         <ImageView
@@ -32,77 +32,93 @@
             app:srcCompat="@drawable/baseline_work_black_24dp" />
 
         <TextView
-            android:id="@+id/streetTextControl"
+            android:id="@+id/createdJobType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="43 Main Street"
+            android:text="LAWN MOVING"
+            android:textAllCaps="true"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.049"
+            app:layout_constraintHorizontal_bias="0.035"
             app:layout_constraintStart_toEndOf="@+id/imageView10"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.052" />
+            app:layout_constraintVertical_bias="0.057" />
 
         <TextView
-            android:id="@+id/typePayTextControl"
+            android:id="@+id/jobTakenBoolID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mow Lawn - $15/hr"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.011"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.852" />
-
-        <Button
-            android:id="@+id/buttonJobsControl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DROP"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.995" />
-
-        <TextView
-            android:id="@+id/townTextControl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hanover, NH"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.042"
-            app:layout_constraintStart_toEndOf="@+id/imageView10"
-            app:layout_constraintTop_toBottomOf="@+id/streetTextControl"
-            app:layout_constraintVertical_bias="0.019" />
-
-        <ImageView
-            android:id="@+id/jobImageViewControl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="Job taken: "
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.496"
-            app:srcCompat="@drawable/ic_launcher_background" />
+            app:layout_constraintVertical_bias="0.47" />
 
-        <ImageButton
-            android:id="@+id/imageButton2"
+        <TextView
+            android:id="@+id/createdAddressID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="43 Main Street, Hanover, NH"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="@color/white"
-            app:layout_constraintHorizontal_bias="0.95"
+            app:layout_constraintHorizontal_bias="0.064"
+            app:layout_constraintStart_toEndOf="@+id/imageView10"
+            app:layout_constraintTop_toBottomOf="@+id/createdJobType"
+            app:layout_constraintVertical_bias="0.022" />
+
+        <TextView
+            android:id="@+id/createdTakenBy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TAKEN BY: "
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.074"
-            app:srcCompat="@drawable/ic_clarity_settings_solid" />
+            app:layout_constraintTop_toBottomOf="@+id/jobTakenBoolID"
+            app:layout_constraintVertical_bias="0.058" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_margin="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/createdTakenBy"
+            app:layout_constraintVertical_bias="0.555">
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#ffff0000"
+                android:text="DELETE"
+                android:textColorLink="#FFFFFF" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/detailsButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="DETAILS"/>
+
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

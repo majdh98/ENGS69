@@ -1,6 +1,11 @@
 package majd_hamdan.com.easyjob;
 
 import android.app.FragmentManager;
+
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
@@ -43,6 +48,9 @@ public class ContentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        // hide the action bar at the top
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#002171")));
 
 
         if(savedInstanceState != null){

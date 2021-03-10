@@ -42,16 +42,6 @@
     <PreferenceCategory
         android:title="Job Control"
         app:iconSpaceReserved="false">
-        <Preference
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:summary="Manage Job Postings"
-            android:icon="@drawable/cog_transfer"
-            android:title="Delete jobs, marks as complete...">
-            <intent>
-                <!-- todo: add intent leading to job management activity -->
-            </intent>
-        </Preference>
 
         <!-- Unit preference i.e. KM or Miles -->
         <ListPreference
