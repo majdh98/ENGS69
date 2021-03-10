@@ -101,6 +101,234 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         android:id="@+id/past_view">
+
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/job_type"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+                <EditText
+                    android:id="@+id/jobtypeField_p"
+                    android:hint="@string/job_type_hint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="text">
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pay"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/payField_p"
+                    android:layout_width="match_parent"
+                    android:enabled="false"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:hint="@string/pay_hint">
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/descriptionField_p"
+                    android:layout_width="match_parent"
+                    android:enabled="false"
+                    android:layout_height="wrap_content"
+                    android:hint="What the job is about..."
+                    android:inputType="text">
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/address"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/addressField_p"
+                    android:layout_width="match_parent"
+                    android:enabled="false"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                </EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/city"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+                <EditText
+                    android:id="@+id/cityField_p"
+                    android:layout_width="match_parent"
+                    android:enabled="false"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                </EditText>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/state"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+
+                <EditText
+                    android:id="@+id/stateField_p"
+                    android:hint="@string/state_hint"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                </EditText>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zipcode"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+                <EditText
+                    android:id="@+id/zipcodeField_p"
+                    android:layout_width="match_parent"
+                    android:enabled="false"
+                    android:layout_height="wrap_content"
+                    android:inputType="number">
+                </EditText>
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/country"
+                    android:textSize="18dp"
+                    android:textColor="@color/black">
+                </TextView>
+
+                <EditText
+                    android:id="@+id/countryField_p"
+                    android:layout_width="match_parent"
+                    android:enabled="false"
+                    android:layout_height="wrap_content"
+                    android:inputType="text">
+                </EditText>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Creater"
+                    android:textSize="18dp"
+                    android:enabled="false"
+                    android:textColor="@color/black">
+
+                </TextView>
+                <EditText
+                    android:id="@+id/creater"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="text">
+                </EditText>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:textColor="@color/black"
+                    android:text="Creater's Feedback">
+                </TextView>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:id="@+id/creater_fb"></EditText>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:textColor="@color/black"
+                    android:text="Your Feedback">
+                </TextView>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:id="@+id/your_fb"></EditText>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:onClick="onGoBackClicked"
+                        android:text="Back">
+                    </Button>
+
+                    <Button
+                        android:id="@+id/messages"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:onClick="onMessagesClicked"
+                        android:text="See Messages">
+                    </Button>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+
+        </ScrollView>
     </RelativeLayout>
 
     <RelativeLayout
@@ -315,8 +543,89 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/avaliable_job_view">
+
+        <TextView
+            android:id="@+id/job_type_a"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="218dp"
+
+            android:ems="10"
+            android:text="Job Type:"></TextView>
+
+        <TextView
+            android:id="@+id/job_pay_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/job_type_a"
+            android:layout_alignLeft="@+id/job_type_a"
+            android:ems="10"
+            android:text="Job Pay "></TextView>
+
+        <TextView
+            android:id="@+id/creator_name_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/job_pay_a"
+            android:layout_alignLeft="@+id/job_pay_a"
+            android:ems="10"
+            android:text="Job Creator "></TextView>
+
+        <TextView
+            android:id="@+id/location_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/creator_name_a"
+            android:layout_alignLeft="@+id/creator_name_a"
+            android:ems="10"
+            android:text="Job Location "></TextView>
+
+        <TextView
+            android:id="@+id/description_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location_a"
+            android:layout_alignLeft="@+id/location_a"
+            android:ems="10"
+            android:text="Job Description"></TextView>
+
+        <Button
+            android:id="@+id/chat_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/description_a"
+            android:layout_alignLeft="@+id/description_a"
+            android:layout_marginLeft="-4dp"
+            android:layout_marginTop="160dp"
+            android:onClick="onChatClicked"
+            android:text="Chat with the creator"></Button>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/chat_a"
+            android:layout_below="@+id/chat_a"
+            android:onClick="onAcceptClicked"
+            android:text="Accept"></Button>
+
+        <ImageView
+            android:id="@+id/imageView_a"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_above="@+id/job_type_a"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="130dp"
+            android:layout_marginEnd="130dp"
+            android:layout_marginBottom="-160dp"
+            app:srcCompat="@drawable/baseline_work_black_24dp" />
 
 
 

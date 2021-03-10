@@ -67,6 +67,7 @@ import majd_hamdan.com.easyjob.job.Job;
 import majd_hamdan.com.easyjob.job.JobDetailsActivity;
 
 import static majd_hamdan.com.easyjob.ui.HistoryFragment.AVALIABLE_JOB_KEY;
+import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_KEY;
 import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_TAG;
 
 public class OffersFragment extends Fragment implements OnMapReadyCallback {
@@ -248,6 +249,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
             public void onMoreDetailsClick(int position) {
                 Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
                 intent.putExtra(JOB_TAG, AVALIABLE_JOB_KEY);
+                intent.putExtra(JOB_KEY, jobs.get(position));
                 startActivity(intent);
             }
         });
