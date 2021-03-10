@@ -104,7 +104,7 @@ public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAd
         // build the card from the details
 
         // set the poster's name
-        fetch_creator_detail(jobs.get(i).creator_id,jobViewHolder.poster);
+        fetch_creator_detail(jobs.get(i).creator_id, jobViewHolder.poster);
         jobViewHolder.address.setText(address_lines[0] + ", " + address_lines[1] + ", " + state[1]);
         jobViewHolder.type.setText("Job Type: " + jobs.get(i).type);
         jobViewHolder.hourlyPay.setText("Pay: $" + jobs.get(i).hourlyPay + "/hour");
