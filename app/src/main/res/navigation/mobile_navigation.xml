@@ -5,7 +5,7 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_offers">
 
-    <fragment
+    <sticky_fragment
         android:id="@+id/navigation_offers"
         android:name="majd_hamdan.com.easyjob.ui.OffersFragment"
         android:label="@string/title_offers"
@@ -57,24 +57,43 @@
 
         </RadioGroup>
 
-    </fragment>
 
-    <fragment
+    </sticky_fragment>
+
+    <sticky_fragment
         android:id="@+id/navigation_history"
         android:name="majd_hamdan.com.easyjob.ui.HistoryFragment"
-
         android:label="@string/title_offers"
         tools:layout="@layout/fragment_offers">
 
-        android:label="@string/title_history"
-        tools:layout="@layout/fragment_history">
-    </fragment>
 
-    <fragment
+    </sticky_fragment>
+
+    <sticky_fragment
         android:id="@+id/navigation_profile"
         android:name="majd_hamdan.com.easyjob.ui.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile">
-    </fragment>
+
+    </sticky_fragment>
+    <action
+        android:id="@+id/action_golbal_navigation_offers_self"
+        app:destination="@id/navigation_offers"
+        app:popUpTo="@id/navigation_offers"
+        app:launchSingleTop="true" />
+
+    <action
+        android:id="@+id/action_golbal_navigation_profile_self"
+        app:destination="@id/navigation_profile"
+        app:popUpTo="@id/navigation_profile"
+        app:launchSingleTop="true" />
+
+    <action
+        android:id="@+id/action_golbal_navigation_history_self"
+        app:destination="@id/navigation_history"
+        app:popUpTo="@id/navigation_history"
+        app:launchSingleTop="true" />
+
+
 
 </navigation>
