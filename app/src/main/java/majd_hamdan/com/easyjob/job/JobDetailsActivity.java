@@ -1,7 +1,12 @@
 package majd_hamdan.com.easyjob.job;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -28,6 +33,9 @@ public class JobDetailsActivity extends AppCompatActivity {
 
     private Job job;
 
+    // to get a job creator's number of that is necessary
+    private String creatorNumber;
+
     String TAG = "mh";
 
     @Override
@@ -35,9 +43,15 @@ public class JobDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_details);
 
+        // set the app bar color and title
+        setTitle("Job Details");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#002171")));
+
+        // used to suppress the keyboard from popping up when code runs
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
 
         //initiate view ui
-
 
         if(savedInstanceState != null){
             job_code = savedInstanceState.getInt(HistoryFragment.JOB_TAG);
@@ -53,6 +67,7 @@ public class JobDetailsActivity extends AppCompatActivity {
             findViewById(R.id.created_view).setVisibility(View.GONE);
             findViewById(R.id.avaliable_job_view).setVisibility(View.GONE);
             initiate_current_ui();
+
         }else if(job_code == HistoryFragment.PAST_JOB_KEY){
             findViewById(R.id.past_view).setVisibility(View.VISIBLE);
             findViewById(R.id.currentView).setVisibility(View.GONE);
@@ -234,6 +249,8 @@ public class JobDetailsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+                creatorNumber = user.phoneNumber;
+
                 if (user != null) {
                     view.setText(user.firstName + " " + user.lastName);
                 }
@@ -258,7 +275,7 @@ public class JobDetailsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null) {
-                    view.setText(user.firstName + " " + user.lastName);
+//                    view.setText(user.firstName + " " + user.lastName);
                 }
             }
             @Override
@@ -270,4 +287,17 @@ public class JobDetailsActivity extends AppCompatActivity {
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
         Query offerQuery = offers_ref.child(job.);
     }
+
+
+    //Buttons======================================================================================
+    public void onCancelClicked(View view){
+        finish();
+    }
+
+    public void onContactCreatorClicked(View view){
+        // call phone activity to call the creator of the job
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+creatorNumber));
+        startActivity(intent);
+    }
+
 }

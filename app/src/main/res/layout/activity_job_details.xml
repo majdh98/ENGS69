@@ -70,8 +70,8 @@
             android:layout_alignLeft="@+id/description"
             android:layout_marginLeft="-4dp"
             android:layout_marginTop="160dp"
-            android:onClick="onChatClicked"
-            android:text="Chat with the creator"></Button>
+            android:onClick="onContactCreatorClicked"
+            android:text="Contact the Creator"></Button>
 
         <Button
             android:layout_width="match_parent"
@@ -335,6 +335,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:id="@+id/created_view">
 
         <ScrollView
@@ -527,9 +528,51 @@
                         android:text="Cancel">
                     </Button>
 
+                    <Button
+                        android:id="@+id/createJobDelete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#ffff0000"
+                        android:onClick="onDeleteButtonClicked"
+                        android:text="Delete"/>
 
 
                 </LinearLayout>
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="48sp"
+                    android:background="@color/black"
+                    android:padding="2sp"
+                    android:contentDescription="@string/buy_with_googlepay_button_content_description">
+                    <LinearLayout
+                        android:duplicateParentState="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:weightSum="2"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:scaleType="fitCenter"
+                            android:duplicateParentState="true"
+                            android:src="@drawable/googlepay_button_content"/>
+                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/payButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:onClick="onPayButtonClick"
+                        android:duplicateParentState="true"
+                        android:src="@drawable/googlepay_button_overlay"/>
+                </RelativeLayout>
 
             </LinearLayout>
 

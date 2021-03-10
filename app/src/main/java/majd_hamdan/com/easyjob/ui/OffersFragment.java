@@ -118,7 +118,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
 
         // fetch user information to update welcome message
-        fetch_user_info_for_welcome(welcomeMessage);
+        fetch_user_info_for_welcome(welcomeMessage, null);
 
 
         // toggle switch
@@ -257,7 +257,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
 
 
     //Database--------------------------------------------------------------------------------------
-    public static void fetch_user_info_for_welcome(TextView toSetWelcome){
+    public static void fetch_user_info_for_welcome(TextView toSetWelcome, TextView fullName){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(userId);
@@ -268,6 +268,11 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
                 if (user != null) {
                     // get ui element for welcome message and populate with user info
                     toSetWelcome.setText("Hello, " + user.firstName);
+
+                    // can set the user name if that is necessary
+                    if (fullName != null){
+                        fullName.setText(user.firstName + " " + user.lastName);
+                    }
                 }
             }
 

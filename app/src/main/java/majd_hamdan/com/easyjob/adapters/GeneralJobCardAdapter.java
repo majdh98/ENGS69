@@ -10,13 +10,22 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.ButtonBarLayout;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
 import majd_hamdan.com.easyjob.R;
+import majd_hamdan.com.easyjob.authentication.User;
 import majd_hamdan.com.easyjob.job.Job;
 import majd_hamdan.com.easyjob.job.JobDetailsActivity;
 
@@ -93,7 +102,9 @@ public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAd
         String[] state = address_lines[2].split(" ");
 
         // build the card from the details
-        jobViewHolder.poster.setText(jobs.get(i).creator_id);
+
+        // set the poster's name
+        fetch_creator_detail(jobs.get(i).creator_id,jobViewHolder.poster);
         jobViewHolder.address.setText(address_lines[0] + ", " + address_lines[1] + ", " + state[1]);
         jobViewHolder.type.setText("Job Type: " + jobs.get(i).type);
         jobViewHolder.hourlyPay.setText("Pay: $" + jobs.get(i).hourlyPay + "/hour");
@@ -102,6 +113,28 @@ public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAd
     @Override
     public int getItemCount(){
         return jobs.size();
+    }
+
+    // HELPER METHOD =====================================================
+    // Get the name of the job creator
+    public static void fetch_creator_detail(String creatorID, TextView posterName){
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        Query userQuery = users_ref.child(creatorID);
+        userQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+
+                if (user != null) {
+                   posterName.setText("Creator: " + user.firstName + " " + user.lastName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
