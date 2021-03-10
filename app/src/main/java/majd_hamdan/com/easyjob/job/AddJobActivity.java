@@ -128,7 +128,7 @@ public class AddJobActivity extends AppCompatActivity  {
                 Job job = new Job(description, type, offer_id,  job_address, pay, userId);
                 geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
                 database.child("offers").child(offer_id).setValue(job);
-                database.child("users").child(userId).child("offers_created").push().setValue(job);
+                database.child("users").child(userId).child("offers_created").child(offer_id).setValue(job);
                 finish();
             }
             else{

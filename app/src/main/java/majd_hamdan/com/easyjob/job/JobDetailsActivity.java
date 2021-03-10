@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -268,24 +269,30 @@ public class JobDetailsActivity extends AppCompatActivity {
 
     public void onAcceptClicked(View view){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
-        Query userQuery = users_ref.child(userId);
-        userQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                if (user != null) {
-//                    view.setText(user.firstName + " " + user.lastName);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+        job.worker_id = userId;
+        job.isAvaliable = false;
 
+        //update the job as not avaliable in both user offers created list and offers list
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
-        Query offerQuery = offers_ref.child(job.);
+        offers_ref.child(job.location_key).setValue(job);
+
+
+
+
+        //add job to offers accepted by current user
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        users_ref.child(userId).child("offers_accepted").child(job.location_key).setValue(job);
+
+        users_ref.child(job.creator_id).child("offers_created").child(job.location_key).setValue(job);
+
+        Toast toast = Toast.makeText(this, "You have accepted a Job!", Toast.LENGTH_SHORT);
+        toast.show();
+
+        finish();
+
+
+
     }
 
 
@@ -298,6 +305,32 @@ public class JobDetailsActivity extends AppCompatActivity {
         // call phone activity to call the creator of the job
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+creatorNumber));
         startActivity(intent);
+    }
+
+    public void onDropClicked(View view){
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        job.worker_id = "";
+        job.isAvaliable = true;
+
+        //update the job as avaliable in both user offers created list and offers list
+        DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+        offers_ref.child(job.location_key).setValue(job);
+
+
+
+
+        //add job to offers accepted by current user
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        users_ref.child(userId).child("offers_accepted").child(job.location_key).removeValue();
+
+        users_ref.child(job.creator_id).child("offers_created").child(job.location_key).setValue(job);
+
+        Toast toast = Toast.makeText(this, "You have dropped a Job!", Toast.LENGTH_SHORT);
+        toast.show();
+
+        finish();
+
     }
 
 }

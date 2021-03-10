@@ -190,6 +190,8 @@ public class HistoryFragment extends Fragment {
         {
             @Override
             public void onMoreDetailsClick(int position) {
+//                Log.d(TAG, "onMoreDetailsClick: " + position);
+//                Log.d(TAG, "onMoreDetailsClick: " + currentJobs.size());
                 Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
                 intent.putExtra(JOB_TAG, CURRENT_JOB_KEY);
                 intent.putExtra(JOB_KEY, currentJobs.get(position));
@@ -287,6 +289,7 @@ public class HistoryFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Job job = dataSnapshot.getValue(Job.class);
                 if(job != null){
+                    Log.d(TAG, "onChildAdded: adasdasdasd");
                     currentJobs.add(job);
                     initializeCurrentAdapter();
                 }

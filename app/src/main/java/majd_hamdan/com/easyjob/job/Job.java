@@ -36,7 +36,7 @@ public class Job implements Serializable {
         //default values
         isDone_creator = false;
         isDone_worker = false;
-        isAvaliable = false;
+        isAvaliable = true;
         worker_feedback = "";
         creator_feedback = "";
         worker_id = "";
