@@ -207,6 +207,20 @@ public class UserInfoActivity extends AppCompatActivity {
 
     }
 
+
+//    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//
+//user.updateEmail("user@example.com")
+//        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//@Override
+//public void onComplete(@NonNull Task<Void> task) {
+//        if (task.isSuccessful()) {
+//        Log.d(TAG, "User email address updated.");
+//        }
+//        }
+//        });
+
+
     public void loadLogIn(){
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

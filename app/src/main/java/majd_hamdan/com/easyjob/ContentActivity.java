@@ -1,5 +1,8 @@
 package majd_hamdan.com.easyjob;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -25,6 +28,9 @@ public class ContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_content);
         Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         BottomNavigationView navView = findViewById(R.id.nav_view);
+
+        // hide the action bar at the top
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#002171")));
 
 
         // Passing each menu ID as a set of Ids because each

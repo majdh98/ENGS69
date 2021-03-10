@@ -3,8 +3,12 @@ package majd_hamdan.com.easyjob.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.widget.ButtonBarLayout;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +17,18 @@ import java.util.List;
 import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.job.Job;
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
+public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAdapter.JobViewHolder> {
+
+    // setup to handle the button press
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener{
+        void onMoreDetailsClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+    }
 
     public static class JobViewHolder extends RecyclerView.ViewHolder{
 
@@ -22,28 +37,38 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.JobViewHolder> {
         TextView address;
         TextView type;
         TextView hourlyPay;
+        Button moreDetails;
 
-        JobViewHolder(View itemView){
+        JobViewHolder(View itemView, final OnItemClickListener listener){
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.jobCard);
             poster = (TextView)itemView.findViewById(R.id.jobPoster);
             address = (TextView)itemView.findViewById(R.id.jobAddress);
             hourlyPay = (TextView)itemView.findViewById(R.id.jobHourlyPay);
             type = itemView.findViewById(R.id.jobType);
+            moreDetails = (Button)itemView.findViewById(R.id.jobMoreDetails);
+
+            // handle button press
+            moreDetails.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    // todo: implement function to handle the press
+                }
+            });
         }
 
     }
 
     List<Job> jobs;
 
-    public RVAdapter(List<Job> jobs){
+    public GeneralJobCardAdapter(List<Job> jobs){
         this.jobs = jobs;
     }
 
     @Override
     public JobViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.history_job_card_view, viewGroup, false);
-        JobViewHolder jvh = new JobViewHolder(v);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.general_job_card_view, viewGroup, false);
+        JobViewHolder jvh = new JobViewHolder(v, mListener);
         return jvh;
     }
 
