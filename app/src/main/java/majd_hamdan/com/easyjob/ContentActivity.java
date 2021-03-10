@@ -1,6 +1,8 @@
 package majd_hamdan.com.easyjob;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -18,12 +20,21 @@ import majd_hamdan.com.easyjob.ui.StickyFragmentNavigator;
 public class ContentActivity extends AppCompatActivity {
 
     String TAG = "mh";
+    public String NAV_Host_Frag_Tag = "navhosttag";
+    Fragment navHostFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
-        Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        if (savedInstanceState != null) {
+            navHostFragment = getSupportFragmentManager().getFragment(
+                    savedInstanceState, NAV_Host_Frag_Tag);
+        } else {
+            navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        }
+
+
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
 
@@ -61,13 +72,11 @@ public class ContentActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
-
-
-
-
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        getSupportFragmentManager().putFragment(outState, NAV_Host_Frag_Tag, navHostFragment);
+    }
 }

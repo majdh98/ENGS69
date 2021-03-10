@@ -173,9 +173,7 @@ public class StickyFragmentNavigator extends Navigator<StickyFragmentNavigator.D
         }
 
         String tag = Integer.toString(destination.getId());
-        Log.d("mh", "navigate: " + tag);
         Fragment primaryNavigationFragment = mFragmentManager.getPrimaryNavigationFragment();
-        Log.d("mh", "navigate: " + primaryNavigationFragment);
         if(primaryNavigationFragment != null)
             ft.hide(primaryNavigationFragment);
         Fragment destinationFragment = mFragmentManager.findFragmentByTag(tag);
@@ -186,7 +184,6 @@ public class StickyFragmentNavigator extends Navigator<StickyFragmentNavigator.D
         }
         else
             ft.show(destinationFragment);
-        Log.d("mh", "navigate: " + destinationFragment);
 
         ft.setPrimaryNavigationFragment(destinationFragment);
 
