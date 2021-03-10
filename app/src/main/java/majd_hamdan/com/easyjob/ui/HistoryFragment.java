@@ -94,6 +94,7 @@ public class HistoryFragment extends Fragment {
         past = (RadioButton)returnView.findViewById(R.id.past);
 
         // get user info to set the welcome message
+        // using static method from OffersFragment
         OffersFragment.fetch_user_info_for_welcome(welcomeMessage);
 
         // set on click listeners

@@ -55,7 +55,9 @@ public class JobDetailsActivity extends AppCompatActivity {
             initiate_past_ui();
         }else if(job_code == HistoryFragment.CREATED_JOB_KEY){
             findViewById(R.id.created_view).setVisibility(View.VISIBLE);
-            initiate_created_ui();
+            // todo: there are some things that need to be changed here
+//            initiate_created_ui();
+            initiate_current_ui();
         }else{
             findViewById(R.id.avaliable_job_view).setVisibility(View.VISIBLE);
             initiate_avaliable_job_ui();
@@ -70,11 +72,11 @@ public class JobDetailsActivity extends AppCompatActivity {
         TextView job_pay = findViewById(R.id.job_pay);
         TextView name = findViewById(R.id.creator_name);
         TextView location = findViewById(R.id.location);
-        type.setText("Job Type: " + job.type);
-        description.setText("Job Desctribtion: " + job.description);
-        job_pay.setText("$" + job.hourlyPay);
+        type.setText(job.type);
+        description.setText("Description: " + job.description);
+        job_pay.setText("$" + job.hourlyPay +"/hour");
         fetch_creator_info(name, job.creator_id);
-        location.setText(job.address);
+        location.setText("Location: " + job.address);
 
     }
 
