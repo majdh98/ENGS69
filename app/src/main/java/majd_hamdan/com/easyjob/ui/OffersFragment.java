@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,19 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import androidx.appcompat.widget.SwitchCompat;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,11 +57,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import majd_hamdan.com.easyjob.ContentActivity;
 import majd_hamdan.com.easyjob.R;
 
-import majd_hamdan.com.easyjob.ViewJobsActivity;
-import majd_hamdan.com.easyjob.adapters.RVAdapter;
+import majd_hamdan.com.easyjob.adapters.GeneralJobCardAdapter;
+import majd_hamdan.com.easyjob.authentication.User;
 import majd_hamdan.com.easyjob.helper.PermissionUtils;
 import majd_hamdan.com.easyjob.job.AddJobActivity;
 import majd_hamdan.com.easyjob.job.Job;
@@ -97,6 +90,8 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     private int items_queried;
     private int items_retrieved;
 
+    private String userFirstName;
+
 
     String TAG = "mh";
 
@@ -106,11 +101,14 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_offers, container, false);
 
-        // get ui elements
+        // fetch user information
+        fetch_user_info(returnView);
 
+        // GET UI ELEMENTS
         // toggle switch
         mapToggle = (RadioButton)returnView.findViewById(R.id.Maps);
         listToggle = (RadioButton)returnView.findViewById(R.id.offer);
+
 
         mapToggle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,13 +131,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
         });
 
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
-        viewJobButtons = (Button)returnView.findViewById(R.id.viewJobs);
-        viewJobButtons.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ViewJobsActivity.class));
-            }
-        });
         addJob = (Button) returnView.findViewById(R.id.createJob);
         addJob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,12 +227,36 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initializeAdapter(){
-        RVAdapter adapter = new RVAdapter(jobs);
+        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(jobs);
         view.setAdapter(adapter);
     }
 
 
     //Database--------------------------------------------------------------------------------------
+    public void fetch_user_info(View view){
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        Query userQuery = users_ref.child(userId);
+        userQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    userFirstName = user.firstName;
+
+                    // get ui element for welcome message and populate with user info
+                    welcomeMessage = (TextView)view.findViewById(R.id.welcome);
+                    welcomeMessage.setText("Hello, " + userFirstName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     //fetch offers around default radius of user from firebase
     public void fetch_offers(){
