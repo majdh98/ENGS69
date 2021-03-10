@@ -294,6 +294,11 @@ public class JobDetailsActivity extends AppCompatActivity {
         finish();
     }
 
+    public void onChatClickedDetails(View view){
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+creatorNumber));
+        startActivity(intent);
+    }
+
     public void onContactCreatorClicked(View view){
         // call phone activity to call the creator of the job
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+creatorNumber));
