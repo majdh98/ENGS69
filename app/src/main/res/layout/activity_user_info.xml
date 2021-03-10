@@ -27,6 +27,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="102dp"
             android:layout_marginBottom="280dp"
+            android:scaleType="fitCenter"
             android:src="@drawable/logocircle" />
 
         <TextView

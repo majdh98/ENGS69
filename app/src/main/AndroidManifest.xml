@@ -55,7 +55,10 @@
 
         <activity android:name=".payment.CheckoutActivity"></activity>
 
-        <activity android:name=".ui.UserInfoActivity">
+        <activity android:name=".ui.UserInfoActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="majd_hamdan.com.easyjob.ui.UserInfoActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
