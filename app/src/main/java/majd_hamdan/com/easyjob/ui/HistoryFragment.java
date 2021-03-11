@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -185,7 +184,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void initializeCurrentAdapter(){
-        GeneralJobCardAdapter adapter =new GeneralJobCardAdapter(currentJobs); 
+        GeneralJobCardAdapter adapter =new GeneralJobCardAdapter(createdJobs); // new GeneralJobCardAdapter(currentJobs);
         currentView.setAdapter(adapter);
         adapter.setOnItemClickListener(new GeneralJobCardAdapter.OnItemClickListener()
         {
@@ -201,7 +200,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private void initializePastAdapter(){
-        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(pastJobs);
+        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(createdJobs); // new GeneralJobCardAdapter(pastJobs);
         pastView.setAdapter(adapter);
         adapter.setOnItemClickListener(new GeneralJobCardAdapter.OnItemClickListener()
         {
@@ -230,23 +229,6 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onDeleteClick(int position) {
 
-                Job job = createdJobs.get(position);
-
-
-                //remove offer from offers c
-                DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
-                offers_ref.child(job.location_key).removeValue();
-
-                //remove offer from user created
-                DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
-                users_ref.child(job.creator_id).child("offers_created").child(job.location_key).removeValue();
-
-                createdJobs.remove(job);
-                initializeCreatedAdapter();
-
-                Toast toast = Toast.makeText(getActivity(), "You have deleted a Job!", Toast.LENGTH_SHORT);
-                toast.show();
-
             }
         });
 
@@ -273,28 +255,22 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                pastJobs = new ArrayList<>();
-                fetch_past_jobs();
 
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                pastJobs = new ArrayList<>();
-                fetch_past_jobs();;
 
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                pastJobs = new ArrayList<>();
-                fetch_past_jobs();
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                pastJobs = new ArrayList<>();
-                fetch_past_jobs();
+
             }
 
         });
@@ -311,7 +287,6 @@ public class HistoryFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Job job = dataSnapshot.getValue(Job.class);
                 if(job != null){
-                    Log.d(TAG, "onChildAdded: adasdasdasd");
                     currentJobs.add(job);
                     initializeCurrentAdapter();
                 }
@@ -319,32 +294,21 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                currentJobs = new ArrayList<>();
-                initializeCurrentAdapter();
-                fetch_current_jobs();
+
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                currentJobs = new ArrayList<>();
-                initializeCurrentAdapter();
-                fetch_current_jobs();
 
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                currentJobs = new ArrayList<>();
-                initializeCurrentAdapter();
-                fetch_current_jobs();
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                currentJobs = new ArrayList<>();
-                initializeCurrentAdapter();
-                fetch_current_jobs();
 
             }
 
@@ -355,13 +319,11 @@ public class HistoryFragment extends Fragment {
     //fetch offers that has been created by user
     @SuppressLint("MissingPermission")
     public void fetch_created_jobs(){
-        Log.d(TAG, "fetch_created_jobs: aaaaaaaaaaaaaaaa");
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
         Query offersQuery = offers_ref.child(userId).child("offers_created");
         offersQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                Log.d(TAG, "onChildAdded: ssssssssssssssssssssssssssssssssssssssssss");
                 Job job = dataSnapshot.getValue(Job.class);
                 if(job != null){
                     createdJobs.add(job);
@@ -372,38 +334,25 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                createdJobs = new ArrayList<>();
-                initializeCreatedAdapter();
-                fetch_created_jobs();
-
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                createdJobs = new ArrayList<>();
-                initializeCreatedAdapter();
-                fetch_created_jobs();
 
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                createdJobs = new ArrayList<>();
-                initializeCreatedAdapter();
-                fetch_created_jobs();
 
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                createdJobs = new ArrayList<>();
-                initializeCreatedAdapter();
-                fetch_created_jobs();
+
             }
+
         });
 
     }
-
-
 
 }

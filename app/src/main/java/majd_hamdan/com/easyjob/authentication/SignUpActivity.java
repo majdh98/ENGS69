@@ -82,6 +82,7 @@ public class SignUpActivity extends AppCompatActivity {
                     .setPositiveButton(android.R.string.ok, null)
                     .show();
         } else {
+            // if user is non existent yet, then create a sign up activity that accepts user, email, and password
             firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -105,12 +106,15 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void save_user_info(){
+        // find the information the user input from the edit texts
+
         String userId;
         String fn = firstName.getText().toString();
         String ln = lastName.getText().toString();
         String phonenum = phoneNumber.getText().toString();
 
         //get user id
+        // authenticate and find user from firebase
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         userId = firebaseUser.getUid();

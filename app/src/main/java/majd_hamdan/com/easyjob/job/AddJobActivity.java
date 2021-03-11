@@ -44,6 +44,9 @@ import majd_hamdan.com.easyjob.payment.CheckoutActivity;
 
 public class AddJobActivity extends AppCompatActivity  {
 
+    // instance variables for the constructor and method codes
+
+    // references for database, geo location, and location requests
     private DatabaseReference database;
     private DatabaseReference geofire_db;
     private GeoFire geoFire;
@@ -55,7 +58,7 @@ public class AddJobActivity extends AppCompatActivity  {
     private FusedLocationProviderClient fusedLocationClient;
 
 
-
+    // references for edit text information for the job
     private EditText job_type;
     private EditText job_pay;
     private EditText job_description;
@@ -95,6 +98,7 @@ public class AddJobActivity extends AppCompatActivity  {
         geoFire = new GeoFire(geofire_db);
 
         // Add items via the Button and EditText at the bottom of the view.
+        // initialize the instance variables foe edit texts and find their values
         job_type = (EditText) findViewById(R.id.jobtypeField);
         job_pay = (EditText) findViewById(R.id.payField);
         job_description = (EditText) findViewById(R.id.descriptionField);
@@ -118,14 +122,20 @@ public class AddJobActivity extends AppCompatActivity  {
 
 
     public void onAddJobClicked(View view){
-        String type = job_type.getText().toString();
+        // if user clicks and selects to add a job
+        // find the information the user input in the text
 
+        String type = job_type.getText().toString();
         String pay = String.valueOf(job_pay.getText());
         String description = job_description.getText().toString();
         String offer_id = database.push().getKey();
         Log.d(TAG, "onAddJobClicked: "+ offer_id);
+
+        // find the address of the job to be added
         if(getLocationFromAddress()){
             if(!checkInfo()){
+
+                // if address info is not selected yet, then validate address and save
                 Job job = new Job(description, type, offer_id,  job_address, pay, userId);
                 geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
                 database.child("offers").child(offer_id).setValue(job);
@@ -135,6 +145,9 @@ public class AddJobActivity extends AppCompatActivity  {
                 finish();
             }
             else{
+                // if one of the address tabs is empty, check which ones are empty
+                // and send the user a toast to fill in the info
+
                 String address = address_field.getText().toString();
                 String zip = zipcode_field.getText().toString();
                 String state = state_field.getText().toString();
@@ -149,6 +162,9 @@ public class AddJobActivity extends AppCompatActivity  {
             }
 
         }else{
+            //if address is not validated, then make sure to tell the user to enter address
+            // in requested format
+
             CharSequence text = "Address can't be found, please enter address in requested format.";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(this, text, duration);
@@ -158,6 +174,8 @@ public class AddJobActivity extends AppCompatActivity  {
     }
 
     public boolean checkInfo(){
+        // checking if any of the edit texts are left unfilled
+
         String type = job_type.getText().toString();
         String pay = String.valueOf(job_pay.getText());
         String description = job_description.getText().toString();
@@ -170,11 +188,15 @@ public class AddJobActivity extends AppCompatActivity  {
     }
 
     public String makeToast(String[] info, String[] tags){
+        // creating the toast with the specific edit texts that are unfilled
+
         StringBuilder toast = new StringBuilder();
 
         for(int i = 0; i < info.length; i++){
 
             if( toast.toString().length() == 0 && info[i].length() == 0){
+                // finding the edit texts with no texts
+
                 toast.append(tags[i]);
             }
             else if(info[i].length() == 0){
@@ -187,6 +209,7 @@ public class AddJobActivity extends AppCompatActivity  {
 
     @SuppressLint("MissingPermission")
     public void autofill_address(){
+        // used to find location to fill in address edit texts automatically
 
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -210,6 +233,8 @@ public class AddJobActivity extends AppCompatActivity  {
     }
 
     public void fill_address_fields(String address, String city, String state, String country, String zipcode){
+        // method to fill in address given address information specified in parameter
+
         address_field.setText(address);
         city_field.setText(city);
         state_field.setText(state);
@@ -218,6 +243,8 @@ public class AddJobActivity extends AppCompatActivity  {
     }
 
     public void loadLogIn(){
+        // function to start the activity that asks for authentication
+
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -225,6 +252,9 @@ public class AddJobActivity extends AppCompatActivity  {
     }
 
     public boolean getLocationFromAddress(){
+        // given location find address and validate address
+
+        // take the address from the edit text views and validate
         String str_add = address_field.getText().toString();
         String city = city_field.getText().toString();
         String state = state_field.getText().toString();
@@ -232,15 +262,19 @@ public class AddJobActivity extends AppCompatActivity  {
         String country = country_field.getText().toString();
         String address = str_add + ", " + city + ", " + state + " " + zipcode + ", " + country;
 
+
+
         try {
             Geocoder selected_place_geocoder = new Geocoder(this);
             List<Address> addresses;
 
             addresses = selected_place_geocoder.getFromLocationName(address, 1);
 
+            // check if the address is a valid one from geo location and return boolean
             if (addresses == null) {
                 return false;
-            } else {
+            }
+            else {
                 Address location = addresses.get(0);
                 job_location.setLatitude(location.getLatitude());
                 job_location.setLongitude(location.getLongitude());
