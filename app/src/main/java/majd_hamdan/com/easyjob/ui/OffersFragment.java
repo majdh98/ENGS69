@@ -140,7 +140,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
         mapToggle = (RadioButton)returnView.findViewById(R.id.Maps);
         listToggle = (RadioButton)returnView.findViewById(R.id.offer);
 
-        // set up click listener for map toogle
+
         mapToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,8 +151,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
-
-        // set up click listener for list toogle
         listToggle.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -193,14 +191,13 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
         //sync the google map fragment
         mapFragment.getMapAsync(this);
 
-        // find location by initializing geo fire database
+
         geofire_db = FirebaseDatabase.getInstance().getReference().child("geofire");
         geoFire = new GeoFire(geofire_db);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
         createLocationRequest();
 
-        // create a location request and find the user's location
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -219,21 +216,19 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onResume() {
         super.onResume();
-        // when activity resumes start location update
         startLocationUpdates();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        // when activity pauses, stop updating location
         stopLocationUpdates();
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        // getting the map ready
+
         map = googleMap;
         //check for permission and enable location layer.
         enableMyLocation();
@@ -255,7 +250,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
 
                 TextView title = (TextView)view.findViewById(R.id.popUpTitle);
                 TextView pay = (TextView)view.findViewById(R.id.popUpPay);
-                title.setText(clickMapItemMarker.title);
+                title.setTextColor(Color.WHITE);;
                 pay.setText(clickMapItemMarker.snippet);
 
                 return view;
@@ -296,7 +291,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
         jobs = new ArrayList<>();
     }
 
-    // initializing adapter to display
     private void initializeAdapter(){
         GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(jobs);
         view.setAdapter(adapter);
@@ -314,12 +308,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
 
 
     //Database--------------------------------------------------------------------------------------
-<<<<<<< Updated upstream
     public static void fetch_user_info_for_welcome(TextView toSetWelcome){
-=======
-    public static void fetch_user_info_for_welcome(TextView toSetWelcome, TextView fullName){
-        // fetch the user info in order to display the welcome page
->>>>>>> Stashed changes
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(userId);
@@ -342,8 +331,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
 
     //fetch offers around default radius of user from firebase
     public void fetch_offers(){
-        // use geographical location to display job offers around the user
-        // start by fetching the users location from data base
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(initial_location.getLatitude(), initial_location.getLongitude()), 3);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
@@ -490,9 +477,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     
     public void populate_map(){
         Log.d(TAG, "populate_map: ");
-        // populate map with jobs that are near by from the data base
         for(int i = 0; i<jobs.size(); i++){
-<<<<<<< Updated upstream
             //            LatLng job_location = getLocationFromAddress(jobs.get(i).address);
             //            Marker marker = map.addMarker(
             //                    new MarkerOptions()
@@ -501,9 +486,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
             //                            .snippet("$"+jobs.get(i).hourlyPay));
             //            marker.showInfoWindow();
 
-=======
-            // for each job, create marker, find location, and display on the map
->>>>>>> Stashed changes
             LatLng job_location = getLocationFromAddress(jobs.get(i).address);
             double lat = job_location.latitude;
             double lng = job_location.longitude;
@@ -555,11 +537,10 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     }
 
     public LatLng getLocationFromAddress(String address){
-        // given address find the lat lng
         try {
             Geocoder selected_place_geocoder = new Geocoder(getActivity());
             List<Address> addresses;
-            // get the list of addresses and find location
+
             addresses = selected_place_geocoder.getFromLocationName(address, 1);
 
             if (addresses == null) {
