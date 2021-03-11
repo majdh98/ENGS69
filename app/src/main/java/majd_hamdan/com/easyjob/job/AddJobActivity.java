@@ -132,6 +132,7 @@ public class AddJobActivity extends AppCompatActivity  {
                 database.child("users").child(userId).child("offers_created").child(offer_id).setValue(job);
                 Intent intent = new Intent(this, CheckoutActivity.class);
                 startActivity(intent);
+                finish();
             }
             else{
                 String address = address_field.getText().toString();

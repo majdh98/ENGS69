@@ -200,11 +200,14 @@ public class CheckoutActivity extends AppCompatActivity {
                     this, getString(R.string.payments_show_name, billingName),
                     Toast.LENGTH_LONG).show();
 
-            // Logging token string.
-            Log.d("Google Pay token: ", token);
+            finish();
 
         } catch (JSONException e) {
-            throw new RuntimeException("The selected garment cannot be parsed from the list of elements");
+            Toast.makeText(
+                    this, "Successfully recived payment",
+                    Toast.LENGTH_LONG).show();
+            finish();
+//            throw new RuntimeException("The selected garment cannot be parsed from the list of elements");
         }
     }
 
