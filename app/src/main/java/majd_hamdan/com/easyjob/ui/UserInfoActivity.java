@@ -215,12 +215,12 @@ public class UserInfoActivity extends AppCompatActivity {
         user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(UserInfoActivity.this, R.string.permission_required_toast,
+                Toast.makeText(UserInfoActivity.this, "You account has been deleted",
                         Toast.LENGTH_SHORT).show();
             }
+
+            // todo: complete this method
         });
-
-
     }
 
 
