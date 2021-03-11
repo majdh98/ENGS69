@@ -53,7 +53,7 @@ public class JobDetailsActivity extends AppCompatActivity {
 
 
         //initiate view ui
-
+        // find job code and job from saved instance state if activity is destroyed
         if(savedInstanceState != null){
             job_code = savedInstanceState.getInt(HistoryFragment.JOB_TAG);
             job = (Job) savedInstanceState.getSerializable(HistoryFragment.JOB_KEY);
@@ -61,6 +61,8 @@ public class JobDetailsActivity extends AppCompatActivity {
             job_code = getIntent().getIntExtra(HistoryFragment.JOB_TAG, 0);
             job = (Job) getIntent().getSerializableExtra(HistoryFragment.JOB_KEY);
         }
+
+        // depending on  current, past, or created job, decide which one to display
 
         if(job_code == HistoryFragment.CURRENT_JOB_KEY){
             findViewById(R.id.current_view).setVisibility(View.VISIBLE);
@@ -151,6 +153,7 @@ public class JobDetailsActivity extends AppCompatActivity {
     }
 
     public void initiate_created_ui(){
+        // references for the job profile information
 
         EditText job_type;
         EditText job_pay;
@@ -161,6 +164,9 @@ public class JobDetailsActivity extends AppCompatActivity {
         EditText state_field;
         EditText country_field;
         EditText worker;
+
+        // initialize the edit texts for the job profile information
+
         job_type = (EditText) findViewById(R.id.jobtypeField);
         job_pay = (EditText) findViewById(R.id.payField);
         job_description = (EditText) findViewById(R.id.descriptionField);
@@ -171,10 +177,10 @@ public class JobDetailsActivity extends AppCompatActivity {
         state_field = (EditText) findViewById(R.id.stateField);
         worker = (EditText) findViewById(R.id.worker);
 
+        // set edit text information from what the user input
         job_type.setText(job.type);
         job_description.setText(job.description);
         job_pay.setText(job.hourlyPay);
-
         String[] add = job.address.split(",");
         String[] state_zip = add[2].split(" ");
         address_field.setText(add[0]);
@@ -196,7 +202,7 @@ public class JobDetailsActivity extends AppCompatActivity {
             worker.setVisibility(View.VISIBLE);
             fetch_user_info(worker, job.worker_id);
         }else{
-            if(job.isAvaliable){
+            if(!job.isAvaliable){
                 job_description.setEnabled(false);
                 job_pay.setEnabled(false);
                 job_type.setEnabled(false);
@@ -229,13 +235,15 @@ public class JobDetailsActivity extends AppCompatActivity {
 
 
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        // create onSaveInstanceState to retrieve information on resume or restart of activity
 
+        super.onSaveInstanceState(outState);
         outState.putInt(HistoryFragment.JOB_TAG, job_code);
         outState.putSerializable(HistoryFragment.JOB_KEY, job);
     }
 
     public void fetch_user_info(TextView view, String creator_id ){
+        // get user info from data base
 
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(creator_id);
@@ -330,5 +338,26 @@ public class JobDetailsActivity extends AppCompatActivity {
         finish();
 
     }
+
+    public void onSaveClicked(View view){
+        finish();
+    }
+
+    public void onDeleteButtonClicked(View view){
+
+        //remove offer from offers c
+        DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+        offers_ref.child(job.location_key).removeValue();
+
+        //remove offer from user created
+        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+        users_ref.child(job.creator_id).child("offers_created").child(job.location_key).removeValue();
+
+        Toast toast = Toast.makeText(this, "You have deleted a Job!", Toast.LENGTH_SHORT);
+        toast.show();
+        finish();
+    }
+
+
 
 }
