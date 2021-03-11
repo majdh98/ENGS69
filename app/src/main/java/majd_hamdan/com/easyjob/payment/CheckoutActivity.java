@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
@@ -42,6 +43,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import majd_hamdan.com.easyjob.R;
+import majd_hamdan.com.easyjob.job.AddJobActivity;
 
 /**
  * Checkout implementation for the app
@@ -56,6 +58,7 @@ public class CheckoutActivity extends AppCompatActivity {
     private PaymentsClient paymentsClient;
 
     private View googlePayButton;
+    private TextView pay;
 
 
     /**
@@ -68,6 +71,10 @@ public class CheckoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_checkout);
+        setTitle("Pay for Job");
+
+        pay = findViewById(R.id.price);
+        pay.setText("$ " + AddJobActivity.payment);
 
         googlePayButton = findViewById(R.id.googlePayButton);
         googlePayButton.setOnClickListener(

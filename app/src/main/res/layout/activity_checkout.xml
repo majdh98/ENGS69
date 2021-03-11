@@ -27,8 +27,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:gravity="center"
         android:layout_marginEnd="20dp"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:textAlignment="center"
+            android:text="Dear EasyJob User, You need to pay for the job as you create it. If it is not completed or is deleted, your money will be refunded. Otherwise, it will be transfers to the worker that completes the job."
+            android:textColor="#333333"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"/>
 
         <TextView
             android:id="@+id/price"
@@ -37,8 +52,11 @@
             android:layout_marginTop="15dp"
             android:text="15"
             android:textColor="#333333"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textSize="20sp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"/>
 
         <include
             android:id="@+id/googlePayButton"
