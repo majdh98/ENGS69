@@ -24,6 +24,8 @@ public class LogOutActivity extends AppCompatActivity {
 
 
     public void loadLogIn(){
+        // call the method that start the activity that asks for login information
+
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

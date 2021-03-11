@@ -37,8 +37,8 @@ import majd_hamdan.com.easyjob.authentication.LoginActivity;
 public class MainActivity extends AppCompatActivity {
     String TAG = "mh";
 
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+    private FirebaseAuth firebaseAuth;      // instance variable for firebase authentication
+    private FirebaseUser firebaseUser;      // instance variable for firebase user profile
 
 
 
@@ -48,30 +48,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // remove the app bar
-        getSupportActionBar().hide();
+        getSupportActionBar().hide();           // hiding the action bar
 
         // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseAuth = FirebaseAuth.getInstance();  // getting the authentication instance
+        firebaseUser = firebaseAuth.getCurrentUser();  // getting the current user
         if (firebaseUser == null) {
             // Not logged in, launch the Log In activity
-            loadLogIn();
+            loadLogIn();            // if user is null, then call and display login information
         }else{
-           loadContent();
+           loadContent();           // if user is not null, then load the contents
         }
 
     }
 
 
     public void loadLogIn(){
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);  // create the login activity
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
     public void loadContent(){
-        Intent intent = new Intent(this, ContentActivity.class);
+        Intent intent = new Intent(this, ContentActivity.class);        // create and start the content activity
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

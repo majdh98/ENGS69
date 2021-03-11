@@ -47,14 +47,14 @@ public class HistoryFragment extends Fragment {
 
     private String TAG = "mh";
 
-    private RecyclerView currentView;
+    private RecyclerView currentView;       // creating instance variables for the different views
     private RecyclerView pastView;
     private RecyclerView createdView;
     private TextView welcomeMessage;
 
 
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+    private FirebaseAuth firebaseAuth;      // instance variable for firebase authentication
+    private FirebaseUser firebaseUser;      // instance variable for firebase user
     private String userId;
 
     private FusedLocationProviderClient fusedLocationClient;
@@ -102,10 +102,10 @@ public class HistoryFragment extends Fragment {
         current.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                current.setSelected(true);
-                created.setSelected(false);
+                current.setSelected(true);      // setting that current has been selected to true
+                created.setSelected(false);     // and setting the rest to false, so as not to display
                 past.setSelected(false);
-                returnView.findViewById(R.id.currentView).setVisibility(View.VISIBLE);
+                returnView.findViewById(R.id.currentView).setVisibility(View.VISIBLE); // setting the visibility accordingly
                 returnView.findViewById(R.id.createdView).setVisibility(View.GONE);
                 returnView.findViewById(R.id.pastView).setVisibility(View.GONE);
             }
@@ -113,8 +113,8 @@ public class HistoryFragment extends Fragment {
 
         created.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                created.setSelected(true);
+            public void onClick(View v) {           // doing the same thing we did for onClick listener for current just except for
+                created.setSelected(true);          // created now
                 current.setSelected(false);
                 past.setSelected(false);
                 returnView.findViewById(R.id.createdView).setVisibility(View.VISIBLE);
@@ -125,8 +125,8 @@ public class HistoryFragment extends Fragment {
 
         past.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                past.setSelected(true);
+            public void onClick(View v) {       // doing the same thing we did for onClick listener for current just except for
+                past.setSelected(true);         // past now
                 current.setSelected(false);
                 created.setSelected(false);
                 returnView.findViewById(R.id.pastView).setVisibility(View.VISIBLE);
@@ -139,31 +139,35 @@ public class HistoryFragment extends Fragment {
         // set recycler views
 
         // current
+        // setting the current view to the layout
         currentView = returnView.findViewById(R.id.currentRecycler);
         currentView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         currentView.setLayoutManager(llm);
 
         // created
+        // setting the created view to the layout
         createdView = returnView.findViewById(R.id.createdRecycler);
         createdView.setHasFixedSize(true);
         LinearLayoutManager llm2 = new LinearLayoutManager(getContext());
         createdView.setLayoutManager(llm2);
 
         // past
+        // setting the pastView to the layout
         pastView = returnView.findViewById(R.id.pastRecycler);
         pastView.setHasFixedSize(true);
         LinearLayoutManager llm3 = new LinearLayoutManager(getContext());
         pastView.setLayoutManager(llm3);
 
-
+        // setting the geographical location in order to find location
         geofire_db = FirebaseDatabase.getInstance().getReference().child("geofire");
         geoFire = new GeoFire(geofire_db);
 
+        // find the users location
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         user_location = new Location(LocationManager.GPS_PROVIDER);
 
-
+        // get authentication and authority from firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         userId = firebaseUser.getUid();
@@ -175,20 +179,28 @@ public class HistoryFragment extends Fragment {
     }
 
     private void initJobs(){
+        // initializing the list for the three different states of jobs
         pastJobs = new ArrayList<>();
         createdJobs = new ArrayList<>();
         currentJobs = new ArrayList<>();
-        fetch_current_jobs();
+        fetch_current_jobs();  // now that the lists have been initialized find the jobs for each state
         fetch_created_jobs();
         fetch_past_jobs();
         // todo: fetch past and created jobs
     }
 
     private void initializeCurrentAdapter(){
+<<<<<<< Updated upstream
         GeneralJobCardAdapter adapter =new GeneralJobCardAdapter(currentJobs); 
+=======
+
+        // initializing current adapter to display the jobs
+        GeneralJobCardAdapter adapter =new GeneralJobCardAdapter(createdJobs); // new GeneralJobCardAdapter(currentJobs);
+>>>>>>> Stashed changes
         currentView.setAdapter(adapter);
         adapter.setOnItemClickListener(new GeneralJobCardAdapter.OnItemClickListener()
         {
+            // if any of the items in the adapter are clicked, then start an activity for that specific job
             @Override
             public void onMoreDetailsClick(int position) {
                 Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
@@ -200,6 +212,7 @@ public class HistoryFragment extends Fragment {
 
     }
 
+    // initializing the adapter for past job with the same functionality as the above or current job adapter
     private void initializePastAdapter(){
         GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(pastJobs);
         pastView.setAdapter(adapter);
@@ -215,6 +228,7 @@ public class HistoryFragment extends Fragment {
         });
     }
 
+    // initializing the adapter for past job with the same functionality as the above or current job adapter
     private void initializeCreatedAdapter(){
         CreatedJobCardAdapter adapter = new CreatedJobCardAdapter(createdJobs);
         createdView.setAdapter(adapter);
@@ -259,6 +273,7 @@ public class HistoryFragment extends Fragment {
 
         Log.d(TAG, "fetch_past_jobs: ");
 
+        // find the jobs specified from the data base
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
         Query offersQuery = offers_ref.child(userId).child("offers_accepted").orderByChild("isDone_worker").equalTo(true);
         offersQuery.addChildEventListener(new ChildEventListener() {

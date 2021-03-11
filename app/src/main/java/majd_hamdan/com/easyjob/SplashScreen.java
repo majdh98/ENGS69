@@ -8,10 +8,10 @@ import android.os.Handler;
 
 public class SplashScreen extends AppCompatActivity {
 
+    // an activity started to show the logo of the app when the application is opened
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -20,6 +20,7 @@ public class SplashScreen extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3000);
+        }, 3000); // delay it so that the logo can be displayed long enough
+        // for the user to see
     }
 }
