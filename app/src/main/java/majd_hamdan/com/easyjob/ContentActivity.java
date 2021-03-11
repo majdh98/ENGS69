@@ -1,16 +1,9 @@
 package majd_hamdan.com.easyjob;
 
-import android.app.FragmentManager;
-
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.location.Location;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;

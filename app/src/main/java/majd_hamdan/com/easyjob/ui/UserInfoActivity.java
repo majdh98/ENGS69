@@ -1,6 +1,8 @@
 package majd_hamdan.com.easyjob.ui;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -37,6 +39,7 @@ import majd_hamdan.com.easyjob.ContentActivity;
 import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.authentication.LoginActivity;
 import majd_hamdan.com.easyjob.authentication.User;
+import majd_hamdan.com.easyjob.job.Job;
 
 public class UserInfoActivity extends AppCompatActivity {
 
@@ -208,13 +211,48 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     public void onDeleteButtonClicked(View view) {
-        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Toast.makeText(UserInfoActivity.this, R.string.permission_required_toast,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setMessage(R.string.delete_account)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
+                        Query userQuery = offers_ref.orderByChild("creator_id").equalTo(userId);
+                        userQuery.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Job job = dataSnapshot.getValue(Job.class);
+                                if(!job.isAvaliable){
+                                    offers_ref.child(job.location_key).removeValue();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                        //remove offer from user created
+                        DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
+                        users_ref.child(userId).removeValue();
+
+                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(UserInfoActivity.this, "User info and profile are deleted!",
+                                        Toast.LENGTH_SHORT).show();
+
+                            }
+
+
+                        });
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+
 
 
     }

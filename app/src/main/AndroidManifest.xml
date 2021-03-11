@@ -53,7 +53,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".payment.CheckoutActivity"></activity>
+        <activity android:name=".payment.CheckoutActivity">
+            <intent-filter>
+                <action android:name="majd_hamdan.com.easyjob.payment.CheckoutActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".ui.UserInfoActivity"
             android:configChanges="orientation|screenSize"

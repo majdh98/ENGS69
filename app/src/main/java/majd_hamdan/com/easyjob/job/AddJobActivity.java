@@ -40,6 +40,7 @@ import java.util.Locale;
 
 import majd_hamdan.com.easyjob.R;
 import majd_hamdan.com.easyjob.authentication.LoginActivity;
+import majd_hamdan.com.easyjob.payment.CheckoutActivity;
 
 public class AddJobActivity extends AppCompatActivity  {
 
@@ -129,7 +130,8 @@ public class AddJobActivity extends AppCompatActivity  {
                 geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
                 database.child("offers").child(offer_id).setValue(job);
                 database.child("users").child(userId).child("offers_created").child(offer_id).setValue(job);
-                finish();
+                Intent intent = new Intent(this, CheckoutActivity.class);
+                startActivity(intent);
             }
             else{
                 String address = address_field.getText().toString();

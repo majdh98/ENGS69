@@ -564,14 +564,6 @@
                             android:duplicateParentState="true"
                             android:src="@drawable/googlepay_button_content"/>
                     </LinearLayout>
-                    <ImageView
-                        android:id="@+id/payButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="fitXY"
-                        android:onClick="onPayButtonClick"
-                        android:duplicateParentState="true"
-                        android:src="@drawable/googlepay_button_overlay"/>
                 </RelativeLayout>
 
             </LinearLayout>

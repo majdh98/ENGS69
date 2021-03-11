@@ -62,4 +62,8 @@
     <string name="googlepay_button_content_description">Google Pay</string>
     <string name="buy_with_googlepay_button_content_description">Buy with Google Pay</string>
 
+    <string name="delete_account">We are sorry to see you leave. Please make sure all jobs created have
+    no worker and all worked job are done or dropped or you will be charged the job price before
+    you delete.</string>
+
 </resources>

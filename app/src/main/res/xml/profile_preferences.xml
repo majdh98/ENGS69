@@ -3,15 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:visibility="visible"
     app:iconSpaceReserved="false">
-
-    <!-- Account Preferences -->
-        <!-- CAN EDIT ANYTIME
-             INTENT TO CALL NEW ACTIVITY
-            - First Name
-            - Last Name
-            - Phone Number
-            - SAVE, CANCEL BUTTON, DELETE ACCOUNT OPTION
-        -->
+    >
     <PreferenceCategory
         android:title="Account"
         app:iconSpaceReserved="false">
