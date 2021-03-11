@@ -192,8 +192,7 @@ public class HistoryFragment extends Fragment {
     private void initializeCurrentAdapter(){
 
         // initializing current adapter to display the jobs
-        GeneralJobCardAdapter adapter =new GeneralJobCardAdapter(createdJobs); // new GeneralJobCardAdapter(currentJobs);
-
+        GeneralJobCardAdapter adapter = new GeneralJobCardAdapter(currentJobs);
         currentView.setAdapter(adapter);
         adapter.setOnItemClickListener(new GeneralJobCardAdapter.OnItemClickListener()
         {
@@ -286,6 +285,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 pastJobs = new ArrayList<>();
+                initializePastAdapter();
                 fetch_past_jobs();
 
             }
@@ -293,19 +293,22 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 pastJobs = new ArrayList<>();
-                fetch_past_jobs();;
+                initializePastAdapter();
+                fetch_past_jobs();
 
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 pastJobs = new ArrayList<>();
+                initializePastAdapter();
                 fetch_past_jobs();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 pastJobs = new ArrayList<>();
+                initializePastAdapter();
                 fetch_past_jobs();
             }
 
