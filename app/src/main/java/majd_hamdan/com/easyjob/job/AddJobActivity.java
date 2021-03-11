@@ -56,6 +56,7 @@ public class AddJobActivity extends AppCompatActivity  {
     private Location job_location;
     private String job_address;
     private FusedLocationProviderClient fusedLocationClient;
+    public static String payment;
 
 
     // references for edit text information for the job
@@ -140,6 +141,7 @@ public class AddJobActivity extends AppCompatActivity  {
                 geoFire.setLocation(offer_id, new GeoLocation(job_location.getLatitude(), job_location.getLongitude()));
                 database.child("offers").child(offer_id).setValue(job);
                 database.child("users").child(userId).child("offers_created").child(offer_id).setValue(job);
+                payment = pay;
                 Intent intent = new Intent(this, CheckoutActivity.class);
                 startActivity(intent);
                 finish();
