@@ -250,7 +250,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
 
                 TextView title = (TextView)view.findViewById(R.id.popUpTitle);
                 TextView pay = (TextView)view.findViewById(R.id.popUpPay);
-                title.setTextColor(Color.WHITE);;
+                title.setText(clickMapItemMarker.title);
                 pay.setText(clickMapItemMarker.snippet);
 
                 return view;
