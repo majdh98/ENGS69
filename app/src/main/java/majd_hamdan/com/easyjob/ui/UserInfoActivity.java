@@ -79,14 +79,17 @@ public class UserInfoActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
+        // find image view to reorganize when orientation changes
         imageView = findViewById(R.id.easyjob_imageview);
 
-
+        // initalize user info to use
         userInfo = new User();
 
     }
 
     public void onSaveButtonClicked(View view) {
+        // on save button clicked, check if the user has changed any of the profile information,
+        // if change happened, then update user info, if no change, use previous information
         String fn = firstName.getText().toString();
         if(fn.isEmpty()){
             fn = userInfo.firstName;
@@ -136,12 +139,13 @@ public class UserInfoActivity extends AppCompatActivity {
         //get user id
         userId = user.getUid();
 
-
+        // find user info from data base
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(userId);
         userQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // if data is changed then reset data base information
                 User user  = dataSnapshot.getValue(User.class);
                 if(user != null){
                     userInfo = user;

@@ -15,7 +15,7 @@ import majd_hamdan.com.easyjob.job.Job;
 public class ViewJobsActivity extends AppCompatActivity {
 
     // todo: this is a test, the job entries should come form the db
-    private List<Job> jobs;
+    private List<Job> jobs;         // list of jobs available
     RecyclerView view;
 
     @Override
@@ -32,14 +32,14 @@ public class ViewJobsActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         view.setLayoutManager(llm);
 
-        initJobs();
-        initializeAdapter();
+        initJobs();  // call the method to initialize the jobs
+        initializeAdapter();   // initialize the adapter to display the jobs
     }
 
 
     // todo: this is only a test - read data from db instead
     private void initJobs(){
-        jobs = new ArrayList<>();
+        jobs = new ArrayList<>();    // create the list
 //        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
 //        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
 //        jobs.add(new Job("43 Main Street", "Hanover, NH", R.drawable.ic_launcher_background, "Mow Lawn", 15.0));
@@ -47,7 +47,7 @@ public class ViewJobsActivity extends AppCompatActivity {
     }
 
     private void initializeAdapter(){
-        CreatedJobCardAdapter adapter = new CreatedJobCardAdapter(jobs);
+        CreatedJobCardAdapter adapter = new CreatedJobCardAdapter(jobs);  // initialize and create the adapter to display
         view.setAdapter(adapter);
     }
 }

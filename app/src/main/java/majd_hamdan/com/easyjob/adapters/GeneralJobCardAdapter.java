@@ -49,6 +49,7 @@ public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAd
 
     public static class JobViewHolder extends RecyclerView.ViewHolder{
 
+        // references for the job view
         CardView cv;
         TextView poster;
         TextView address;
@@ -57,7 +58,10 @@ public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAd
         Button moreDetails;
 
         JobViewHolder(View itemView, final OnItemClickListener listener){
+
             super(itemView);
+            // initialize the views for the job holder UI
+
             cv = (CardView)itemView.findViewById(R.id.jobCard);
             poster = (TextView)itemView.findViewById(R.id.jobPoster);
             address = (TextView)itemView.findViewById(R.id.jobAddress);
@@ -118,6 +122,8 @@ public class GeneralJobCardAdapter extends RecyclerView.Adapter<GeneralJobCardAd
     // HELPER METHOD =====================================================
     // Get the name of the job creator
     public static void fetch_creator_detail(String creatorID, TextView posterName){
+        // find the job creator's information
+
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
         Query userQuery = users_ref.child(creatorID);
         userQuery.addValueEventListener(new ValueEventListener() {
