@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorPrimary" format="color"></attr>
+    <attr name="colorPrimaryVariant" format="color"></attr>
+    <attr name="colorOnPrimary" format="color"></attr>
+    <!-- Secondary brand color. -->
+    <attr name="colorSecondary" format="color"></attr>
+    <attr name="colorSecondaryVariant" format="color"></attr>
+    <attr name="colorOnSecondary" format="color"></attr>
+</resources>
