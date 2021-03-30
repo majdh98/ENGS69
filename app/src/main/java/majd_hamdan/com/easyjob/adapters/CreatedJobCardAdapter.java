@@ -1,11 +1,9 @@
 package majd_hamdan.com.easyjob.adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,8 +16,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -113,7 +109,7 @@ public class CreatedJobCardAdapter extends RecyclerView.Adapter<CreatedJobCardAd
         holder.address.setText(address_lines[0] + ", " + address_lines[1] + ", " + state[1]);
 
         // check whether or not the job has been taken
-        if(jobs.get(i).isAvaliable){
+        if(jobs.get(i).isAvailable){
             // if the job has not yet been taken
             holder.jobTaken.setText("Job taken: Not yet");
             holder.jobTakenBy.setVisibility(View.GONE);

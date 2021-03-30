@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +52,7 @@ public class HistoryFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;      // instance variable for firebase authentication
     private FirebaseUser firebaseUser;      // instance variable for firebase user
-    private String userId;
+    private String user_id;
 
     private FusedLocationProviderClient fusedLocationClient;
     private DatabaseReference geofire_db;
@@ -64,12 +61,9 @@ public class HistoryFragment extends Fragment {
 
     private Location user_location;
 
-    public static final String JOB_TAG = "jt";
+    public static final String USER_ID_TAG = "uit";
     public static final String JOB_KEY = "jK";
-    public static final int CURRENT_JOB_KEY = 1;
-    public static final int PAST_JOB_KEY = 2;
-    public static final int CREATED_JOB_KEY = 3;
-    public static final int AVALIABLE_JOB_KEY = 4;
+
 
 
     // toggling between views
@@ -170,7 +164,7 @@ public class HistoryFragment extends Fragment {
         // get authentication and authority from firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        userId = firebaseUser.getUid();
+        user_id = firebaseUser.getUid();
 
         // fetch current, past and created jobs
         initJobs();
@@ -200,12 +194,11 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onMoreDetailsClick(int position) {
                 Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
-                intent.putExtra(JOB_TAG, CURRENT_JOB_KEY);
+                intent.putExtra(USER_ID_TAG, user_id);
                 intent.putExtra(JOB_KEY, currentJobs.get(position));
                 startActivity(intent);
             }
         });
-
     }
 
     // initializing the adapter for past job with the same functionality as the above or current job adapter
@@ -217,7 +210,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onMoreDetailsClick(int position) {
                 Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
-                intent.putExtra(JOB_TAG, PAST_JOB_KEY);
+                intent.putExtra(USER_ID_TAG, user_id);
                 intent.putExtra(JOB_KEY, pastJobs.get(position));
                 startActivity(intent);
             }
@@ -232,7 +225,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onDetailsClick(int position) {
                 Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
-                intent.putExtra(JOB_TAG, CREATED_JOB_KEY);
+                intent.putExtra(USER_ID_TAG, user_id);
                 intent.putExtra(JOB_KEY, createdJobs.get(position));
                 startActivity(intent);
             }
@@ -271,7 +264,7 @@ public class HistoryFragment extends Fragment {
 
         // find the jobs specified from the data base
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
-        Query offersQuery = offers_ref.child(userId).child("offers_accepted").orderByChild("isDone_worker").equalTo(true);
+        Query offersQuery = offers_ref.child(user_id).child("offers_accepted").orderByChild("isDone_worker").equalTo(true);
         offersQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
@@ -320,7 +313,7 @@ public class HistoryFragment extends Fragment {
     @SuppressLint("MissingPermission")
     public void fetch_current_jobs(){
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
-        Query offersQuery = offers_ref.child(userId).child("offers_accepted").orderByChild("isDone_worker").equalTo(false);
+        Query offersQuery = offers_ref.child(user_id).child("offers_accepted").orderByChild("isDone_worker").equalTo(false);
         offersQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
@@ -370,13 +363,11 @@ public class HistoryFragment extends Fragment {
     //fetch offers that has been created by user
     @SuppressLint("MissingPermission")
     public void fetch_created_jobs(){
-        Log.d(TAG, "fetch_created_jobs: aaaaaaaaaaaaaaaa");
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("users");
-        Query offersQuery = offers_ref.child(userId).child("offers_created");
+        Query offersQuery = offers_ref.child(user_id).child("offers_created");
         offersQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                Log.d(TAG, "onChildAdded: ssssssssssssssssssssssssssssssssssssssssss");
                 Job job = dataSnapshot.getValue(Job.class);
                 if(job != null){
                     createdJobs.add(job);
@@ -416,9 +407,5 @@ public class HistoryFragment extends Fragment {
                 fetch_created_jobs();
             }
         });
-
     }
-
-
-
 }

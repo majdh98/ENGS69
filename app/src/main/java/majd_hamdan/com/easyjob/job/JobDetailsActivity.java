@@ -1,7 +1,6 @@
 package majd_hamdan.com.easyjob.job;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +32,7 @@ public class JobDetailsActivity extends AppCompatActivity {
     private int job_code;//tells which view we are dealing with(past, current or created)
 
     private Job job;
+    private String user_id;
 
     // to get a job creator's number of that is necessary
     private String creatorNumber;
@@ -46,7 +46,7 @@ public class JobDetailsActivity extends AppCompatActivity {
 
         // set the app bar color and title
         setTitle("Job Details");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#002171")));
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.primaryColor)));
 
         // used to suppress the keyboard from popping up when code runs
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -55,58 +55,63 @@ public class JobDetailsActivity extends AppCompatActivity {
         //initiate view ui
         // find job code and job from saved instance state if activity is destroyed
         if(savedInstanceState != null){
-            job_code = savedInstanceState.getInt(HistoryFragment.JOB_TAG);
+            user_id = savedInstanceState.getString(HistoryFragment.USER_ID_TAG);
             job = (Job) savedInstanceState.getSerializable(HistoryFragment.JOB_KEY);
         }else{
-            job_code = getIntent().getIntExtra(HistoryFragment.JOB_TAG, 0);
+            user_id = getIntent().getStringExtra(HistoryFragment.USER_ID_TAG);
             job = (Job) getIntent().getSerializableExtra(HistoryFragment.JOB_KEY);
         }
 
-        // depending on  current, past, or created job, decide which one to display
-
-        if(job_code == HistoryFragment.CURRENT_JOB_KEY){
-            findViewById(R.id.current_view).setVisibility(View.VISIBLE);
-            findViewById(R.id.past_view).setVisibility(View.GONE);
-            findViewById(R.id.created_view).setVisibility(View.GONE);
-            findViewById(R.id.avaliable_job_view).setVisibility(View.GONE);
-            initiate_current_ui();
-
-        }else if(job_code == HistoryFragment.PAST_JOB_KEY){
-            findViewById(R.id.past_view).setVisibility(View.VISIBLE);
-            findViewById(R.id.currentView).setVisibility(View.GONE);
-            findViewById(R.id.created_view).setVisibility(View.GONE);
-            findViewById(R.id.avaliable_job_view).setVisibility(View.GONE);
-            initiate_past_ui();
-        }else if(job_code == HistoryFragment.CREATED_JOB_KEY){
+//        display the correct UI depending on the job properties
+        // display the job as created by current user if the current user is the creator
+        if(job.creator_id.equals(user_id)){
             findViewById(R.id.created_view).setVisibility(View.VISIBLE);
             findViewById(R.id.past_view).setVisibility(View.GONE);
             findViewById(R.id.current_view).setVisibility(View.GONE);
             findViewById(R.id.avaliable_job_view).setVisibility(View.GONE);
             initiate_created_ui();
-            initiate_past_ui();
         }else{
-            findViewById(R.id.avaliable_job_view).setVisibility(View.VISIBLE);
-            findViewById(R.id.current_view).setVisibility(View.GONE);
-            findViewById(R.id.created_view).setVisibility(View.GONE);
-            findViewById(R.id.past_view).setVisibility(View.GONE);
-            initiate_avaliable_job_ui();
+            // display the available job UI if the job is available for the take
+            if(job.isAvailable){
+                findViewById(R.id.avaliable_job_view).setVisibility(View.VISIBLE);
+                findViewById(R.id.current_view).setVisibility(View.GONE);
+                findViewById(R.id.created_view).setVisibility(View.GONE);
+                findViewById(R.id.past_view).setVisibility(View.GONE);
+                initiate_available_job_ui();
+            }else{
+                // display past job UI as the job is done
+                if(job.isDone_worker){
+                    findViewById(R.id.past_view).setVisibility(View.VISIBLE);
+                    findViewById(R.id.currentView).setVisibility(View.GONE);
+                    findViewById(R.id.created_view).setVisibility(View.GONE);
+                    findViewById(R.id.avaliable_job_view).setVisibility(View.GONE);
+                    initiate_past_ui();
+                }
+                // the job must still be going so display current job UI
+                else{
+                    findViewById(R.id.current_view).setVisibility(View.VISIBLE);
+                    findViewById(R.id.past_view).setVisibility(View.GONE);
+                    findViewById(R.id.created_view).setVisibility(View.GONE);
+                    findViewById(R.id.avaliable_job_view).setVisibility(View.GONE);
+                    initiate_current_ui();
+                }
+            }
         }
+
     }
 
 
     public void initiate_current_ui(){
-
         TextView type = findViewById(R.id.job_type);
         TextView description = findViewById(R.id.description);
         TextView job_pay = findViewById(R.id.job_pay);
         TextView name = findViewById(R.id.creator_name);
         TextView location = findViewById(R.id.location);
         type.setText("Job Type: " + job.type);
-        description.setText("Job Desctribtion: " + job.description);
+        description.setText("Job Description: " + job.description);
         job_pay.setText("$" + job.hourlyPay);
         fetch_user_info(name, job.creator_id);
         location.setText(job.address);
-
     }
 
     public void initiate_past_ui(){
@@ -202,7 +207,7 @@ public class JobDetailsActivity extends AppCompatActivity {
             worker.setVisibility(View.VISIBLE);
             fetch_user_info(worker, job.worker_id);
         }else{
-            if(!job.isAvaliable){
+            if(!job.isAvailable){
                 job_description.setEnabled(false);
                 job_pay.setEnabled(false);
                 job_type.setEnabled(false);
@@ -218,8 +223,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         }
             }
 
-    public void initiate_avaliable_job_ui(){
-
+    public void initiate_available_job_ui(){
         TextView type = findViewById(R.id.job_type_a);
         TextView description = findViewById(R.id.description_a);
         TextView job_pay = findViewById(R.id.job_pay_a);
@@ -238,7 +242,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         // create onSaveInstanceState to retrieve information on resume or restart of activity
 
         super.onSaveInstanceState(outState);
-        outState.putInt(HistoryFragment.JOB_TAG, job_code);
+        outState.putString(HistoryFragment.USER_ID_TAG, user_id);
         outState.putSerializable(HistoryFragment.JOB_KEY, job);
     }
 
@@ -272,7 +276,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         job.worker_id = userId;
-        job.isAvaliable = false;
+        job.isAvailable = false;
 
         //update the job as not avaliable in both user offers created list and offers list
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
@@ -317,7 +321,7 @@ public class JobDetailsActivity extends AppCompatActivity {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         job.worker_id = "";
-        job.isAvaliable = true;
+        job.isAvailable = true;
 
         //update the job as avaliable in both user offers created list and offers list
         DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");

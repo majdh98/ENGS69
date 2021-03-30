@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,7 +44,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -76,9 +74,8 @@ import majd_hamdan.com.easyjob.job.AddJobActivity;
 import majd_hamdan.com.easyjob.job.Job;
 import majd_hamdan.com.easyjob.job.JobDetailsActivity;
 
-import static majd_hamdan.com.easyjob.ui.HistoryFragment.AVALIABLE_JOB_KEY;
 import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_KEY;
-import static majd_hamdan.com.easyjob.ui.HistoryFragment.JOB_TAG;
+import static majd_hamdan.com.easyjob.ui.HistoryFragment.USER_ID_TAG;
 
 public class OffersFragment extends Fragment implements OnMapReadyCallback,
         ClusterManager.OnClusterClickListener<OffersFragment.MapItem>,
@@ -96,11 +93,11 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     private Location initial_location;
     private ClusterManager<MapItem> clusterManager;
     private MapItem clickMapItemMarker;
+    private String user_id;
 
 
     private RecyclerView view;
     private TextView welcomeMessage;
-    private Button viewJobButtons;
     private Button addJob;
     private List<Job> jobs;
 
@@ -108,12 +105,8 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     private RadioButton listToggle;
 
     private int items_queried;
-    private int items_retrieved;
-
-    private String userFirstName;
-
-
-    String TAG = "mh";
+    ArrayList<String> geofire_keys;
+    String TAG = "xdmh";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,11 +119,14 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_offers, container, false);
 
-
-        // GET UI ELEMENTS
-
         // welcome message
         welcomeMessage = (TextView)returnView.findViewById(R.id.welcome);
+
+        //get user id
+        user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // initialze the geofire keys array list
+        geofire_keys = new ArrayList<>();
 
         // fetch user information to update welcome message
         fetch_user_info_for_welcome(welcomeMessage);
@@ -175,8 +171,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
         view.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         view.setLayoutManager(llm);
-        items_queried = 0;
-        items_retrieved = 0;
         initJobs();
 
         return returnView;
@@ -233,13 +227,11 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
         //check for permission and enable location layer.
         enableMyLocation();
 
-        clusterManager = new ClusterManager<MapItem>(getContext(), map);
-
-        // setup on click listeners
+        // setup clusters
+        clusterManager = new ClusterManager<>(getContext(), map);
         clusterManager.setOnClusterClickListener(this);
         clusterManager.setOnClusterItemClickListener(this);
         clusterManager.setOnClusterItemInfoWindowClickListener(this);
-
         clusterManager.getMarkerCollection().setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
@@ -261,29 +253,12 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
                 return null;
             }
         });
-
         MapItemMarkerRender renderer = new MapItemMarkerRender(getContext(), map, clusterManager);
-
+        // set clusters listeners
         map.setOnCameraIdleListener(clusterManager);
         map.setOnMarkerClickListener(clusterManager);
         clusterManager.setRenderer(renderer);
 
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            initial_location = location;
-                            LatLng latLng = new LatLng(location.getLatitude(),
-                                    location.getLongitude());
-                            // Logic to handle location object
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-
-                            fetch_offers();
-                        }
-                    }
-                });
     }
 
     //ListView--------------------------------------------------------------------------------------
@@ -299,19 +274,18 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
             @Override
             public void onMoreDetailsClick(int position) {
                 Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
-                intent.putExtra(JOB_TAG, AVALIABLE_JOB_KEY);
+                intent.putExtra(USER_ID_TAG, user_id);
                 intent.putExtra(JOB_KEY, jobs.get(position));
                 startActivity(intent);
             }
         });
     }
 
-
     //Database--------------------------------------------------------------------------------------
     public static void fetch_user_info_for_welcome(TextView toSetWelcome){
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference users_ref = FirebaseDatabase.getInstance().getReference("users");
-        Query userQuery = users_ref.child(userId);
+        Query userQuery = users_ref.child(user_id);
         userQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -329,34 +303,16 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
         });
     }
 
-    //fetch offers around default radius of user from firebase
+    // fetch offers around default radius of user from firebase using geofire library
+    // geofire will run onKeyEntered every time it finds a key that fall withing the radius.
+    // once it finds all the keys it will run onGeoQueryReady where another query to firebase will
+    // be run to get all the offers associated with the geofire keys.
     public void fetch_offers(){
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(initial_location.getLatitude(), initial_location.getLongitude()), 3);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if(getContext() != null){
-                    items_queried++;
-
-                    DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
-                    Query offersQuery = offers_ref.child(key);
-                    offersQuery.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            items_retrieved++;
-                            Job job = dataSnapshot.getValue(Job.class);
-                            if(job != null){
-                                jobs.add(job);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-
+                geofire_keys.add(key);
             }
 
 
@@ -380,21 +336,38 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
             public void onGeoQueryReady() {
                 //once the data has been queried, check if the loaded data count equals the
                 //queried data. If not, wait until all data is loaded then initializeAdapter
+                items_queried = 0;
+                if(getContext() != null){
+                    // get offers reference
+                    DatabaseReference offers_ref = FirebaseDatabase.getInstance().getReference("offers");
 
-                if(items_queried == items_retrieved){
-                    //populate list
-                    initializeAdapter();
-                    
-                    //populate map
-                    populate_map();
-                }else{
-                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            onGeoQueryReady();
-                        }
-                    }, 1000);
+                    for(int i = 0; i < geofire_keys.size(); i++){
+                        // query each key in geofire_keys
+                        Query offersQuery = offers_ref.child(geofire_keys.get(i));
+                        offersQuery.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                // get the job from db and add it to the jobs array list
+                                Job job = dataSnapshot.getValue(Job.class);
+                                if(job != null){
+                                    jobs.add(job);
+                                }
+                                items_queried++;
+                                Log.d(TAG, "onDataChange: iq " + items_queried );
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
                 }
+
+                // check if all jobs where queried, if not wait for a second before checking again
+                check_offers_query_completion();
+
             }
 
             @Override
@@ -406,6 +379,30 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
+    }
+
+
+    // check if all jobs where queried, if not wait for a second before checking again.
+    // if all jobs are queried, populate map
+    public void check_offers_query_completion(){
+        Log.d(TAG, "check_offers_query_completion: ");
+        Log.d(TAG, "check_offers_query_compl" + geofire_keys.size() + " " + items_queried);
+        if(items_queried == geofire_keys.size() ){
+            Log.d(TAG, "check_offers_query_completion: adas");
+            geofire_keys.clear();
+            //populate list
+            initializeAdapter();
+
+            //populate map
+            populate_map();
+        }else{
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    check_offers_query_completion();
+                }
+            }, 1000);
+        }
     }
 
     // cluster methods 
@@ -441,7 +438,7 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
     public void onClusterItemInfoWindowClick(MapItem item) {
         // start intent with the attached job
         Intent intent = new Intent(getActivity(), JobDetailsActivity.class);
-        intent.putExtra(JOB_TAG, AVALIABLE_JOB_KEY);
+        intent.putExtra(USER_ID_TAG, user_id);
         intent.putExtra(JOB_KEY, item.attached);
         startActivity(intent);
     }
@@ -473,8 +470,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-    
-    
     public void populate_map(){
         Log.d(TAG, "populate_map: ");
         for(int i = 0; i<jobs.size(); i++){
@@ -588,8 +583,28 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
                 == PackageManager.PERMISSION_GRANTED) {
             if (map != null) {
                 map.setMyLocationEnabled(true);
+
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(getActivity(), location -> {
+
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                initial_location = location;
+                                LatLng latLng = new LatLng(location.getLatitude(),
+                                        location.getLongitude());
+                                // Logic to handle location object
+                                map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+
+                                fetch_offers();
+                            }else{
+                                Toast toast = Toast.makeText(getActivity(), "Unable to find user location, please restart the app",
+                                        Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                        });
             }
         } else {
+
 //            // Display a dialog with rationale and ask for permission
             AlertDialog dialog = new AlertDialog.Builder(getActivity())
                     .setMessage(R.string.permission_rationale_location)
@@ -603,7 +618,6 @@ public class OffersFragment extends Fragment implements OnMapReadyCallback,
                     })
                     .setNegativeButton(android.R.string.cancel, null)
                     .show();
-
         }
     }
 

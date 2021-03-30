@@ -1,7 +1,5 @@
 package majd_hamdan.com.easyjob.job;
 
-import android.location.Location;
-
 import java.io.Serializable;
 
 
@@ -15,7 +13,7 @@ public class Job implements Serializable {
     public String hourlyPay;
     public boolean isDone_worker;//confirmation from the worker
     public boolean isDone_creator;//confirmation from the creator
-    public boolean isAvaliable;
+    public boolean isAvailable;
     public String worker_feedback;
     public String creator_feedback;
     public String creator_id;
@@ -36,7 +34,7 @@ public class Job implements Serializable {
         //default values
         isDone_creator = false;
         isDone_worker = false;
-        isAvaliable = true;
+        isAvailable = true;
         worker_feedback = "";
         creator_feedback = "";
         worker_id = "";
